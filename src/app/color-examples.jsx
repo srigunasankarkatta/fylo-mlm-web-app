@@ -9,7 +9,7 @@ export const ColorExamples = () => {
   return (
     <div className="p-8 space-y-8">
       <h1 className="text-3xl font-bold text-neutral-900 mb-8">
-        Color Palette Examples
+        Customer Portal - Blue Color Theme
       </h1>
 
       {/* Base Colors */}

@@ -1,9 +1,19 @@
 // Customer Portal Module
 // This file serves as the entry point for the customer portal
 
-export { default as CustomerDashboard } from "./components/CustomerDashboard";
-export { default as CustomerProfile } from "./components/CustomerProfile";
-export { default as CustomerOrders } from "./components/CustomerOrders";
-export { default as CustomerSupport } from "./components/CustomerSupport";
+// Layouts
+export { default as CustomerLayout } from "./shared/layouts/CustomerLayout";
 
-// Add more exports as you create components
+// Features
+export * from "./features/home";
+
+// Shared Components
+export * from "./shared/components";
+export * from "./shared/partials";
+
+// Utils
+export * from "./utils/constants";
+export * from "./utils/helpers";
+
+// Legacy exports for backward compatibility
+export { default as CustomerHomePage } from "./components/CustomerHomePage";

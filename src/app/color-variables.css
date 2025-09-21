@@ -128,30 +128,30 @@
   --color-authority-ui-text-tertiary: var(--color-neutral-500);
   --color-authority-ui-text-inverse: #ffffff;
 
-  /* Customer Portal Colors */
-  --color-customer-brand-50: #f0fdfa;
-  --color-customer-brand-100: #ccfbf1;
-  --color-customer-brand-200: #99f6e4;
-  --color-customer-brand-300: #5eead4;
-  --color-customer-brand-400: #2dd4bf;
-  --color-customer-brand-500: #14b8a6;
-  --color-customer-brand-600: #0d9488;
-  --color-customer-brand-700: #0f766e;
-  --color-customer-brand-800: #115e59;
-  --color-customer-brand-900: #134e4a;
-  --color-customer-brand-950: #042f2e;
+  /* Customer Portal Colors - Blue Theme */
+  --color-customer-brand-50: #eff6ff;
+  --color-customer-brand-100: #dbeafe;
+  --color-customer-brand-200: #bfdbfe;
+  --color-customer-brand-300: #93c5fd;
+  --color-customer-brand-400: #60a5fa;
+  --color-customer-brand-500: #3b82f6;
+  --color-customer-brand-600: #2563eb;
+  --color-customer-brand-700: #1d4ed8;
+  --color-customer-brand-800: #1e40af;
+  --color-customer-brand-900: #1e3a8a;
+  --color-customer-brand-950: #172554;
 
-  --color-customer-accent-50: #fff7ed;
-  --color-customer-accent-100: #ffedd5;
-  --color-customer-accent-200: #fed7aa;
-  --color-customer-accent-300: #fdba74;
-  --color-customer-accent-400: #fb923c;
-  --color-customer-accent-500: #f97316;
-  --color-customer-accent-600: #ea580c;
-  --color-customer-accent-700: #c2410c;
-  --color-customer-accent-800: #9a3412;
-  --color-customer-accent-900: #7c2d12;
-  --color-customer-accent-950: #431407;
+  --color-customer-accent-50: #f0f9ff;
+  --color-customer-accent-100: #e0f2fe;
+  --color-customer-accent-200: #bae6fd;
+  --color-customer-accent-300: #7dd3fc;
+  --color-customer-accent-400: #38bdf8;
+  --color-customer-accent-500: #0ea5e9;
+  --color-customer-accent-600: #0284c7;
+  --color-customer-accent-700: #0369a1;
+  --color-customer-accent-800: #075985;
+  --color-customer-accent-900: #0c4a6e;
+  --color-customer-accent-950: #082f49;
 
   --color-customer-status-active: var(--color-success-500);
   --color-customer-status-pending: var(--color-warning-500);
