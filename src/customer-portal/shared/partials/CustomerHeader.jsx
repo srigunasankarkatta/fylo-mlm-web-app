@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X, User, LogIn } from "lucide-react";
 
 const Header = () => {
@@ -26,48 +27,54 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <a
-              href="#home"
+            <Link
+              to="/"
               className="text-customer-ui-text-primary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
             >
               Home
-            </a>
-            <a
-              href="#features"
+            </Link>
+            <Link
+              to="/features"
               className="text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
             >
               Features
-            </a>
-            <a
-              href="#packages"
+            </Link>
+            <Link
+              to="/packages"
               className="text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
             >
               Packages
-            </a>
-            <a
-              href="#faq"
+            </Link>
+            <Link
+              to="/faq"
               className="text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
             >
               FAQ
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              to="/contact"
               className="text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
             >
               Contact
-            </a>
+            </Link>
           </nav>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="flex items-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium">
+            <Link
+              to="/login"
+              className="flex items-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium"
+            >
               <LogIn className="w-4 h-4 mr-2" />
               Login
-            </button>
-            <button className="flex items-center px-6 py-2 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg transition-all duration-200 font-medium shadow-soft hover:shadow-medium">
+            </Link>
+            <Link
+              to="/register"
+              className="flex items-center px-6 py-2 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg transition-all duration-200 font-medium shadow-soft hover:shadow-medium"
+            >
               <User className="w-4 h-4 mr-2" />
               Register
-            </button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -89,50 +96,58 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-customer-ui-surface border-t border-customer-ui-border">
-              <a
-                href="#home"
+              <Link
+                to="/"
                 className="block px-3 py-2 text-customer-ui-text-primary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
-              </a>
-              <a
-                href="#features"
+              </Link>
+              <Link
+                to="/features"
                 className="block px-3 py-2 text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Features
-              </a>
-              <a
-                href="#packages"
+              </Link>
+              <Link
+                to="/packages"
                 className="block px-3 py-2 text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Packages
-              </a>
-              <a
-                href="#faq"
+              </Link>
+              <Link
+                to="/faq"
                 className="block px-3 py-2 text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 FAQ
-              </a>
-              <a
-                href="#contact"
+              </Link>
+              <Link
+                to="/contact"
                 className="block px-3 py-2 text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
-              </a>
+              </Link>
               <div className="pt-4 space-y-2">
-                <button className="w-full flex items-center justify-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium">
+                <Link
+                  to="/login"
+                  className="w-full flex items-center justify-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   <LogIn className="w-4 h-4 mr-2" />
                   Login
-                </button>
-                <button className="w-full flex items-center justify-center px-6 py-2 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg transition-all duration-200 font-medium">
+                </Link>
+                <Link
+                  to="/register"
+                  className="w-full flex items-center justify-center px-6 py-2 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg transition-all duration-200 font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   <User className="w-4 h-4 mr-2" />
                   Register
-                </button>
+                </Link>
               </div>
             </div>
           </div>

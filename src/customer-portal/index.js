@@ -6,6 +6,11 @@ export { default as CustomerLayout } from "./shared/layouts/CustomerLayout";
 
 // Features
 export * from "./features/home";
+export * from "./features/features";
+export * from "./features/packages";
+export * from "./features/faq";
+export * from "./features/contact";
+export * from "./features/auth";
 
 // Shared Components
 export * from "./shared/components";
@@ -14,6 +19,3 @@ export * from "./shared/partials";
 // Utils
 export * from "./utils/constants";
 export * from "./utils/helpers";
-
-// Legacy exports for backward compatibility
-export { default as CustomerHomePage } from "./components/CustomerHomePage";
