@@ -20,18 +20,29 @@ const ContactPage = () => {
     company: "",
     subject: "",
     message: "",
-    inquiryType: "general",
+    inquiryType: "select",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const inquiryTypes = [
-    { value: "general", label: "General Inquiry" },
-    { value: "sales", label: "Sales Question" },
-    { value: "support", label: "Technical Support" },
-    { value: "billing", label: "Billing Issue" },
-    { value: "partnership", label: "Partnership" },
-    { value: "media", label: "Media Inquiry" },
+    { value: "select", label: "Select an Option" },
+    { value: "general", label: "General Information" },
+    { value: "technical", label: "Technical Support (Website Login, Bugs)" },
+    { value: "package-upgrade", label: "Package Upgrade Questions" },
+    {
+      value: "level-income",
+      label: "Income & Commissions: Level Income Calculation",
+    },
+    { value: "fast-track", label: "Income & Commissions: Fast Track Payout" },
+    { value: "club-matrix", label: "Income & Commissions: Club Matrix Status" },
+    {
+      value: "auto-pool",
+      label: "Income & Commissions: Auto Pool Eligibility & Payouts",
+    },
+    { value: "referral-spillover", label: "Referral & Spillover System" },
+    { value: "payment", label: "Payment Issues (Deposit/Withdrawal)" },
+    { value: "other", label: "Other" },
   ];
 
   const contactInfo = [
@@ -89,7 +100,7 @@ const ContactPage = () => {
         company: "",
         subject: "",
         message: "",
-        inquiryType: "general",
+        inquiryType: "select",
       });
     }, 3000);
   };
@@ -247,7 +258,7 @@ const ContactPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                    Inquiry Type *
+                    What is your inquiry regarding? *
                   </label>
                   <select
                     name="inquiryType"

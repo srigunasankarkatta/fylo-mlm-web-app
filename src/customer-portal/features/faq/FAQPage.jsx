@@ -17,97 +17,97 @@ const FAQPage = () => {
 
   const categories = [
     { id: "all", name: "All Questions", count: 0 },
-    { id: "general", name: "General", count: 0 },
+    { id: "structure", name: "Structure", count: 0 },
+    { id: "getting-started", name: "Getting Started", count: 0 },
     { id: "earnings", name: "Earnings", count: 0 },
-    { id: "technical", name: "Technical", count: 0 },
-    { id: "billing", name: "Billing", count: 0 },
-    { id: "support", name: "Support", count: 0 },
+    { id: "auto-pool", name: "Auto Pool", count: 0 },
+    { id: "general", name: "General", count: 0 },
   ];
 
   const faqs = [
     {
       id: 1,
-      category: "general",
-      question: "What is Fylo MLM and how does it work?",
+      category: "structure",
+      question: "How does the 4-referral limit work? What is spillover?",
       answer:
-        "Fylo MLM is a multi-level marketing platform that helps you build and manage your network marketing business. Our 3-level structure allows you to earn through direct referrals and team commissions. You can earn money by referring others to join the platform and by building a team of active members.",
+        "Our system uses a forced 4x10 matrix structure. Each member can only have 4 direct referrals maximum. When someone tries to refer a 5th person, that person automatically 'spills over' to fill empty positions in your downline. This ensures balanced growth and prevents any single person from dominating the structure. Spillover benefits everyone by filling gaps and creating opportunities for all members.",
     },
     {
       id: 2,
-      category: "earnings",
-      question: "How much can I earn with Fylo MLM?",
+      category: "getting-started",
+      question: "What does the package I buy determine?",
       answer:
-        "Your earning potential depends on your package and activity level. With our Starter package, you can earn up to $50 per direct referral, $25 from level 2, and $10 from level 3. Professional and Enterprise packages offer higher earning rates. Many of our top earners make thousands of dollars monthly through their network.",
+        "Your package level determines your earning potential across ALL income streams, especially the Auto Pool. Higher packages unlock access to more lucrative Auto Pool levels with greater commission percentages. For example, buying the Gold package grants you entry into the Level 3 Gold Auto Pool, while the NBNB package gives you access to the highest Level 10 Auto Pool with maximum earning potential.",
     },
     {
       id: 3,
-      category: "technical",
-      question: "Do I need any technical skills to use the platform?",
+      category: "earnings",
+      question: "How do I make money? How many income streams are there?",
       answer:
-        "No technical skills are required! Our platform is designed to be user-friendly for everyone. We provide comprehensive training materials, video tutorials, and 24/7 support to help you get started. The dashboard is intuitive and guides you through each step of building your MLM business.",
+        "There are 4 powerful income streams: 1) Level Income - 0.5 units instantly credited to every person in your upline chain when someone joins, 2) Fast Track Income - instant commissions when team members buy packages, 3) Club Income - 10-level matrix with exponential growth (4, 16, 64...), and 4) Auto Pool Income - company-funded pools with massive commission percentages. All streams work together to maximize your earning potential.",
     },
     {
       id: 4,
-      category: "billing",
-      question: "What payment methods do you accept?",
+      category: "earnings",
+      question: "How far up does the Level Income go?",
       answer:
-        "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, bank transfers, and cryptocurrency (Bitcoin, Ethereum). All payments are processed securely through our encrypted payment gateway. You can also set up automatic payments for convenience.",
+        "Level Income goes all the way to the top of your upline chain! When someone joins your team, every single person above you in the chain receives 0.5 units instantly. This rewards leadership and team building at every level. The more people you have above you, the more Level Income you can potentially receive as your downline grows.",
     },
     {
       id: 5,
       category: "earnings",
-      question: "How often are payouts processed?",
+      question: "When do Fast Track commissions get paid?",
       answer:
-        "Payout frequency depends on your package: Starter package pays monthly, Professional package pays weekly, and Enterprise package pays daily. All payouts are processed automatically to your registered payment method. You can track your earnings in real-time through your dashboard.",
+        "Fast Track commissions are paid INSTANTLY! As soon as someone in your downline purchases a package, a pre-configured percentage is immediately credited to your account. There are no waiting periods, no monthly cycles - you get rewarded immediately for your mentorship and guidance. This creates instant gratification and motivation to help your team succeed.",
     },
     {
       id: 6,
-      category: "general",
-      question: "Is Fylo MLM legitimate and legal?",
+      category: "earnings",
+      question: "How does the Club Income matrix work?",
       answer:
-        "Yes, Fylo MLM is a completely legitimate and legal business opportunity. We operate in compliance with all applicable laws and regulations. Our business model is transparent, and we provide clear information about earnings potential and requirements. We're registered and licensed in all jurisdictions where we operate.",
+        "Club Income uses a 10-level matrix with exponential growth: Level 1 = 4 persons = $4, Level 2 = 16 persons = $16, Level 3 = 64 persons = $64, and so on up to Level 10. Each level has a specific payout amount, and the income grows exponentially as your team expands. This creates massive earning potential as your network grows deeper.",
     },
     {
       id: 7,
-      category: "technical",
-      question: "Is there a mobile app available?",
+      category: "auto-pool",
+      question: "What is the Auto Pool? How is it funded?",
       answer:
-        "Yes! We have mobile apps available for both iOS and Android devices. The app includes all the features of the web platform, including dashboard access, team management, earnings tracking, and communication tools. You can download it from the App Store or Google Play Store.",
+        "The Auto Pool is our most powerful feature - it's funded by the company's share of revenue, NOT from member fees! This makes it completely sustainable. There are 10 Auto Pools (one for each package level: Bronze to NBNB), each with 8 sub-levels containing massive, pre-defined commission percentages. The company funds these pools from its revenue, ensuring long-term sustainability and growth.",
     },
     {
       id: 8,
-      category: "support",
-      question: "What kind of support do you provide?",
+      category: "auto-pool",
+      question: "How do I qualify for a specific Auto Pool level?",
       answer:
-        "We provide comprehensive support including 24/7 live chat, email support, video tutorials, webinars, and one-on-one coaching sessions (depending on your package). Our support team is trained to help with technical issues, business guidance, and platform navigation. We also have a detailed knowledge base and FAQ section.",
+        "You qualify for an Auto Pool level by purchasing the corresponding package. For example, buying the Silver package grants you entry into the Level 2 Silver Auto Pool, while the Ethereum package gives you access to the Level 9 Ethereum Auto Pool. Higher packages unlock more lucrative Auto Pool levels with greater commission percentages and earning opportunities.",
     },
     {
       id: 9,
-      category: "earnings",
-      question: "Are there any hidden fees or charges?",
+      category: "general",
+      question: "Is this sustainable?",
       answer:
-        "No hidden fees! The package price you see is the total cost. There are no monthly subscriptions, hidden charges, or surprise fees. The only additional costs are optional upgrades to higher packages or premium training materials. All pricing is transparent and clearly displayed.",
+        "Yes, absolutely! Our system is designed for long-term sustainability. The Auto Pool is funded by company revenue, not member fees, making it completely sustainable. The 4x10 matrix structure ensures balanced growth and prevents saturation. We have multiple income streams, transparent operations, and a proven business model that has helped thousands of members achieve financial success.",
     },
     {
       id: 10,
-      category: "general",
-      question: "Can I upgrade or downgrade my package later?",
+      category: "getting-started",
+      question: "What's the best package to start with?",
       answer:
-        "Yes, you can upgrade your package at any time to access more features and higher earning potential. Downgrades are also possible, but some features may be restricted. Contact our support team to discuss package changes and we'll help you find the best option for your needs.",
+        "We recommend starting with the Bronze package ($99) to get familiar with the system, then upgrading as you see results. However, higher packages unlock more lucrative Auto Pool levels immediately. Many successful members start with Gold ($399) or higher to access better Auto Pool levels from day one. Your package level determines your earning potential across all income streams.",
     },
     {
       id: 11,
-      category: "technical",
-      question: "What if I forget my password or get locked out?",
+      category: "structure",
+      question: "What happens if I don't get 4 direct referrals?",
       answer:
-        "No problem! You can reset your password using the 'Forgot Password' link on the login page. We'll send a secure reset link to your registered email. If you're still having trouble, contact our support team and we'll help you regain access to your account quickly.",
+        "No problem! The system is designed to help everyone succeed. If you don't reach 4 direct referrals, spillover from other members will fill your empty positions. This means you can still benefit from the growth of the entire network, even if you're not actively recruiting. The balanced structure ensures everyone has opportunities to earn.",
     },
     {
       id: 12,
-      category: "billing",
-      question: "Can I get a refund if I'm not satisfied?",
+      category: "auto-pool",
+      question: "How often are Auto Pool commissions distributed?",
       answer:
-        "We offer a 30-day money-back guarantee for all packages. If you're not completely satisfied with our platform within the first 30 days, contact our support team and we'll provide a full refund, no questions asked. We're confident you'll love our platform, but we want you to feel secure in your investment.",
+        "Auto Pool commissions are distributed automatically as users advance through levels. The system tracks your progress and distributes payments based on your current level and the pre-defined commission percentages. Higher Auto Pool levels have more frequent distributions and larger commission amounts. Everything is automated - no manual tracking required!",
     },
   ];
 

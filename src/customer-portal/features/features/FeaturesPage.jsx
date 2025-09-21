@@ -157,50 +157,179 @@ const FeaturesPage = () => {
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* Four Powerful Income Streams */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-customer-ui-text-primary mb-4">
-              Everything You Need to Succeed
+              Four Powerful Income Streams
             </h2>
-            <p className="text-lg text-customer-ui-text-secondary max-w-2xl mx-auto">
-              Our platform provides all the tools and features necessary to
-              build a successful MLM business.
+            <p className="text-lg text-customer-ui-text-secondary max-w-3xl mx-auto">
+              Our revolutionary compensation system offers multiple ways to
+              earn, creating a robust foundation for your financial success.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-customer-ui-surface rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all duration-300 group"
-              >
-                <div className="w-16 h-16 bg-customer-brand-100 rounded-xl flex items-center justify-center text-customer-brand-500 mb-6 group-hover:bg-customer-brand-500 group-hover:text-white transition-all duration-300">
-                  {feature.icon}
-                </div>
-
-                <h3 className="text-xl font-semibold text-customer-ui-text-primary mb-4">
-                  {feature.title}
-                </h3>
-
-                <p className="text-customer-ui-text-secondary mb-6 leading-relaxed">
-                  {feature.description}
-                </p>
-
-                <ul className="space-y-2">
-                  {feature.benefits.map((benefit, benefitIndex) => (
-                    <li
-                      key={benefitIndex}
-                      className="flex items-center text-sm text-customer-ui-text-tertiary"
-                    >
-                      <CheckCircle className="w-4 h-4 text-customer-brand-500 mr-3 flex-shrink-0" />
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            {/* Level Income */}
+            <div className="group bg-customer-ui-surface rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all duration-300 border border-customer-ui-border hover:border-customer-brand-200">
+              <div className="flex items-center justify-center w-16 h-16 bg-customer-brand-100 rounded-xl mb-6 group-hover:bg-customer-brand-200 transition-colors duration-300">
+                <span className="text-3xl">📈</span>
               </div>
-            ))}
+              <h3 className="text-2xl font-bold text-customer-ui-text-primary mb-4">
+                Level Income - Direct Upline Rewards
+              </h3>
+              <p className="text-customer-ui-text-secondary mb-4">
+                Every time someone joins your team, your entire upline chain
+                gets rewarded instantly.
+              </p>
+              <ul className="space-y-2 text-customer-ui-text-secondary">
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>
+                    0.5 units instantly credited to every person in your upline
+                    chain
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>Rewards leadership and team building efforts</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>
+                    Automatic distribution - no manual tracking needed
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Fast Track Income */}
+            <div className="group bg-customer-ui-surface rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all duration-300 border border-customer-ui-border hover:border-customer-brand-200">
+              <div className="flex items-center justify-center w-16 h-16 bg-customer-accent-100 rounded-xl mb-6 group-hover:bg-customer-accent-200 transition-colors duration-300">
+                <span className="text-3xl">⚡</span>
+              </div>
+              <h3 className="text-2xl font-bold text-customer-ui-text-primary mb-4">
+                Fast Track Income - Instant Commissions
+              </h3>
+              <p className="text-customer-ui-text-secondary mb-4">
+                Get immediate rewards when your team members purchase packages.
+              </p>
+              <ul className="space-y-2 text-customer-ui-text-secondary">
+                <li className="flex items-start">
+                  <span className="text-customer-accent-500 mr-2">•</span>
+                  <span>
+                    Pre-configured percentage instantly credited to direct
+                    upline
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-customer-accent-500 mr-2">•</span>
+                  <span>Immediate reward for mentorship and guidance</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-customer-accent-500 mr-2">•</span>
+                  <span>No waiting periods - commissions paid instantly</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Club Income */}
+            <div className="group bg-customer-ui-surface rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all duration-300 border border-customer-ui-border hover:border-customer-brand-200">
+              <div className="flex items-center justify-center w-16 h-16 bg-customer-brand-100 rounded-xl mb-6 group-hover:bg-customer-brand-200 transition-colors duration-300">
+                <span className="text-3xl">🏆</span>
+              </div>
+              <h3 className="text-2xl font-bold text-customer-ui-text-primary mb-4">
+                Club Income - Matrix Expansion
+              </h3>
+              <p className="text-customer-ui-text-secondary mb-4">
+                A powerful 10-level team building bonus with exponential growth
+                potential.
+              </p>
+              <ul className="space-y-2 text-customer-ui-text-secondary">
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>
+                    Level 1: 4 persons = $4, Level 2: 16 persons = $16
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>Income grows exponentially up to Level 10</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>Balanced 4x10 matrix ensures fair distribution</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Auto Pool Income */}
+            <div className="group bg-customer-ui-surface rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all duration-300 border border-customer-ui-border hover:border-customer-brand-200">
+              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-customer-brand-100 to-customer-accent-100 rounded-xl mb-6 group-hover:from-customer-brand-200 group-hover:to-customer-accent-200 transition-colors duration-300">
+                <span className="text-3xl">💎</span>
+              </div>
+              <h3 className="text-2xl font-bold text-customer-ui-text-primary mb-4">
+                Auto Pool Income - Company-Funded Pools
+              </h3>
+              <p className="text-customer-ui-text-secondary mb-4">
+                The most powerful feature - funded by company revenue, not
+                member fees.
+              </p>
+              <ul className="space-y-2 text-customer-ui-text-secondary">
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>10 pools (Bronze to NBNB) with 8 sub-levels each</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>Massive, pre-defined commission percentages</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-customer-brand-500 mr-2">•</span>
+                  <span>Automatically distributed as users advance levels</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Matrix System Explanation */}
+          <div className="bg-gradient-to-r from-customer-brand-50 to-customer-accent-50 rounded-2xl p-8 mb-16">
+            <h3 className="text-2xl font-bold text-customer-ui-text-primary mb-4 text-center">
+              Balanced 4x10 Matrix System
+            </h3>
+            <p className="text-customer-ui-text-secondary text-center max-w-4xl mx-auto mb-6">
+              Our forced 4x10 matrix ensures balanced growth and fair
+              distribution. Each user can only have 4 direct referrals, and
+              spillover fills the tree evenly, creating a sustainable and
+              profitable structure for everyone.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+              <div className="bg-customer-ui-surface rounded-xl p-6 shadow-soft">
+                <div className="text-3xl font-bold text-customer-brand-500 mb-2">
+                  4
+                </div>
+                <div className="text-customer-ui-text-secondary">
+                  Max Direct Referrals
+                </div>
+              </div>
+              <div className="bg-customer-ui-surface rounded-xl p-6 shadow-soft">
+                <div className="text-3xl font-bold text-customer-accent-500 mb-2">
+                  10
+                </div>
+                <div className="text-customer-ui-text-secondary">
+                  Levels Deep
+                </div>
+              </div>
+              <div className="bg-customer-ui-surface rounded-xl p-6 shadow-soft">
+                <div className="text-3xl font-bold text-customer-brand-500 mb-2">
+                  ∞
+                </div>
+                <div className="text-customer-ui-text-secondary">
+                  Earning Potential
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

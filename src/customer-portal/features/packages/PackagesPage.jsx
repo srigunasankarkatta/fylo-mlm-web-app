@@ -17,99 +17,205 @@ const PackagesPage = () => {
 
   const packages = [
     {
-      id: "starter",
-      name: "Starter Package",
+      id: "bronze",
+      name: "Bronze",
       price: "$99",
-      period: "one-time",
-      icon: <Target className="w-8 h-8" />,
-      color: "from-customer-brand-500 to-customer-brand-600",
-      bgColor: "bg-customer-brand-50",
-      borderColor: "border-customer-brand-200",
-      textColor: "text-customer-brand-600",
-      description: "Perfect for beginners who want to start their MLM journey",
-      features: [
-        "3-Level MLM Structure",
+      level: 1,
+      icon: "🥉",
+      color: "from-amber-500 to-amber-600",
+      bgColor: "bg-amber-50",
+      borderColor: "border-amber-200",
+      textColor: "text-amber-600",
+      description: "Perfect entry point for new members",
+      benefits: [
+        "Unlocks Level 1 Income Potential",
+        "Grants entry into the Level 1 Bronze Auto Pool",
         "Basic Dashboard Access",
         "Email Support",
         "Mobile App Access",
-        "Basic Analytics",
-        "Up to 10 Direct Referrals",
-        "Standard Payout Schedule",
-        "Basic Training Materials",
       ],
-      earnings: {
-        direct: "$50",
-        level2: "$25",
-        level3: "$10",
-      },
       popular: false,
     },
     {
-      id: "professional",
-      name: "Professional Package",
-      price: "$299",
-      period: "one-time",
-      icon: <Star className="w-8 h-8" />,
-      color: "from-customer-accent-500 to-customer-accent-600",
-      bgColor: "bg-customer-accent-50",
-      borderColor: "border-customer-accent-200",
-      textColor: "text-customer-accent-600",
-      description:
-        "Ideal for serious entrepreneurs ready to scale their business",
-      features: [
-        "3-Level MLM Structure",
+      id: "silver",
+      name: "Silver",
+      price: "$199",
+      level: 2,
+      icon: "🥈",
+      color: "from-gray-400 to-gray-500",
+      bgColor: "bg-gray-50",
+      borderColor: "border-gray-200",
+      textColor: "text-gray-600",
+      description: "Enhanced earning potential and features",
+      benefits: [
+        "Unlocks Level 2 Income Potential",
+        "Grants entry into the Level 2 Silver Auto Pool",
         "Advanced Dashboard",
         "Priority Support",
-        "Mobile App + Desktop",
-        "Advanced Analytics",
-        "Up to 50 Direct Referrals",
-        "Weekly Payout Schedule",
-        "Premium Training Materials",
-        "Team Management Tools",
-        "Custom Reports",
-        "Webinar Access",
-        "1-on-1 Coaching Session",
+        "Enhanced Analytics",
       ],
-      earnings: {
-        direct: "$150",
-        level2: "$75",
-        level3: "$30",
-      },
+      popular: false,
+    },
+    {
+      id: "gold",
+      name: "Gold",
+      price: "$399",
+      level: 3,
+      icon: "🥇",
+      color: "from-yellow-500 to-yellow-600",
+      bgColor: "bg-yellow-50",
+      borderColor: "border-yellow-200",
+      textColor: "text-yellow-600",
+      description: "Premium package with significant advantages",
+      benefits: [
+        "Unlocks Level 3 Income Potential",
+        "Grants entry into the Level 3 Gold Auto Pool",
+        "Premium Dashboard",
+        "24/7 Support",
+        "Advanced Team Management",
+      ],
       popular: true,
     },
     {
-      id: "enterprise",
-      name: "Enterprise Package",
-      price: "$599",
-      period: "one-time",
-      icon: <Crown className="w-8 h-8" />,
-      color: "from-customer-brand-700 to-customer-brand-900",
-      bgColor: "bg-gradient-to-br from-customer-brand-50 to-customer-accent-50",
-      borderColor: "border-customer-brand-300",
-      textColor: "text-customer-brand-700",
-      description: "For established leaders who want maximum earning potential",
-      features: [
-        "3-Level MLM Structure",
-        "Premium Dashboard",
-        "24/7 VIP Support",
-        "All Platform Access",
-        "Real-time Analytics",
-        "Unlimited Direct Referrals",
-        "Daily Payout Schedule",
-        "Complete Training Library",
-        "Advanced Team Management",
-        "Custom Analytics",
-        "Exclusive Webinars",
+      id: "platinum",
+      name: "Platinum",
+      price: "$799",
+      level: 4,
+      icon: "💎",
+      color: "from-blue-400 to-blue-500",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
+      textColor: "text-blue-600",
+      description: "Elite level with maximum benefits",
+      benefits: [
+        "Unlocks Level 4 Income Potential",
+        "Grants entry into the Level 4 Platinum Auto Pool",
+        "VIP Dashboard",
         "Personal Success Manager",
-        "Leadership Bonuses",
+        "Exclusive Training Materials",
+      ],
+      popular: false,
+    },
+    {
+      id: "avax",
+      name: "Avax",
+      price: "$1,299",
+      level: 5,
+      icon: "🔷",
+      color: "from-red-500 to-red-600",
+      bgColor: "bg-red-50",
+      borderColor: "border-red-200",
+      textColor: "text-red-600",
+      description: "Crypto-focused package with high rewards",
+      benefits: [
+        "Unlocks Level 5 Income Potential",
+        "Grants entry into the Level 5 Avax Auto Pool",
+        "Crypto Payment Options",
+        "Advanced Analytics",
         "Priority Processing",
+      ],
+      popular: false,
+    },
+    {
+      id: "doge",
+      name: "Doge",
+      price: "$1,999",
+      level: 6,
+      icon: "🐕",
+      color: "from-yellow-400 to-yellow-500",
+      bgColor: "bg-yellow-50",
+      borderColor: "border-yellow-200",
+      textColor: "text-yellow-600",
+      description: "Fun and profitable Dogecoin package",
+      benefits: [
+        "Unlocks Level 6 Income Potential",
+        "Grants entry into the Level 6 Doge Auto Pool",
+        "Doge Payment Integration",
+        "Community Access",
+        "Special Bonuses",
+      ],
+      popular: false,
+    },
+    {
+      id: "xrp",
+      name: "XRP Ripple",
+      price: "$2,999",
+      level: 7,
+      icon: "💙",
+      color: "from-blue-500 to-blue-600",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
+      textColor: "text-blue-600",
+      description: "Ripple network integration package",
+      benefits: [
+        "Unlocks Level 7 Income Potential",
+        "Grants entry into the Level 7 XRP Auto Pool",
+        "XRP Payment System",
+        "Fast Transaction Processing",
+        "Global Network Access",
+      ],
+      popular: false,
+    },
+    {
+      id: "solana",
+      name: "Solana",
+      price: "$4,999",
+      level: 8,
+      icon: "☀️",
+      color: "from-purple-500 to-purple-600",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200",
+      textColor: "text-purple-600",
+      description: "High-performance Solana blockchain package",
+      benefits: [
+        "Unlocks Level 8 Income Potential",
+        "Grants entry into the Level 8 Solana Auto Pool",
+        "Solana Blockchain Integration",
+        "Ultra-Fast Transactions",
+        "Advanced DeFi Features",
+      ],
+      popular: false,
+    },
+    {
+      id: "ethereum",
+      name: "Ethereum",
+      price: "$7,999",
+      level: 9,
+      icon: "🔷",
+      color: "from-indigo-500 to-indigo-600",
+      bgColor: "bg-indigo-50",
+      borderColor: "border-indigo-200",
+      textColor: "text-indigo-600",
+      description: "Ethereum ecosystem integration package",
+      benefits: [
+        "Unlocks Level 9 Income Potential",
+        "Grants entry into the Level 9 Ethereum Auto Pool",
+        "Ethereum Smart Contracts",
+        "DeFi Integration",
+        "NFT Marketplace Access",
+      ],
+      popular: false,
+    },
+    {
+      id: "nbnb",
+      name: "NBNB",
+      price: "$12,999",
+      level: 10,
+      icon: "💎",
+      color: "from-gradient-to-r from-yellow-400 to-orange-500",
+      bgColor: "bg-gradient-to-br from-yellow-50 to-orange-50",
+      borderColor: "border-yellow-300",
+      textColor: "text-orange-600",
+      description: "Ultimate package with maximum earning potential",
+      benefits: [
+        "Unlocks Level 10 Income Potential",
+        "Grants entry into the Level 10 NBNB Auto Pool",
+        "All Platform Features",
+        "VIP Treatment",
+        "Maximum Commission Rates",
+        "Exclusive Events",
         "White-label Options",
       ],
-      earnings: {
-        direct: "$300",
-        level2: "$150",
-        level3: "$60",
-      },
       popular: false,
     },
   ];
@@ -160,76 +266,116 @@ const PackagesPage = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {packages.map((pkg) => (
-              <div
-                key={pkg.id}
-                className={`relative bg-customer-ui-surface rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all duration-300 cursor-pointer border-2 ${
-                  selectedPackage === pkg.id
-                    ? "border-customer-brand-500 ring-2 ring-customer-brand-200"
-                    : "border-customer-ui-border hover:border-customer-brand-300"
-                } ${pkg.popular ? "ring-2 ring-customer-accent-200" : ""}`}
-                onClick={() => setSelectedPackage(pkg.id)}
-              >
-                {pkg.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <div className="bg-customer-accent-500 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center">
-                      <Star className="w-4 h-4 mr-1" />
-                      Most Popular
-                    </div>
-                  </div>
-                )}
-
-                <div
-                  className={`w-16 h-16 ${pkg.bgColor} rounded-xl flex items-center justify-center ${pkg.textColor} mb-6`}
-                >
-                  {pkg.icon}
-                </div>
-
-                <h3 className="text-2xl font-bold text-customer-ui-text-primary mb-2">
-                  {pkg.name}
-                </h3>
-
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-customer-ui-text-primary">
-                    {pkg.price}
-                  </span>
-                  <span className="text-customer-ui-text-tertiary ml-2">
-                    /{pkg.period}
-                  </span>
-                </div>
-
-                <p className="text-customer-ui-text-secondary mb-6">
-                  {pkg.description}
-                </p>
-
-                <div className="space-y-3 mb-8">
-                  {pkg.features.slice(0, 6).map((feature, index) => (
-                    <div key={index} className="flex items-center">
-                      <Check className="w-5 h-5 text-customer-brand-500 mr-3 flex-shrink-0" />
-                      <span className="text-customer-ui-text-secondary text-sm">
-                        {feature}
-                      </span>
-                    </div>
+          {/* Package Comparison Table */}
+          <div className="bg-customer-ui-surface rounded-2xl shadow-soft overflow-hidden mb-8">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-customer-brand-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-customer-ui-text-primary">
+                      Package Name
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-customer-ui-text-primary">
+                      Price
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-customer-ui-text-primary">
+                      Level
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-customer-ui-text-primary">
+                      Key Benefits
+                    </th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-customer-ui-text-primary">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-customer-ui-border">
+                  {packages.map((pkg) => (
+                    <tr
+                      key={pkg.id}
+                      className={`hover:bg-customer-brand-50 transition-colors duration-200 ${
+                        selectedPackage === pkg.id ? "bg-customer-brand-50" : ""
+                      }`}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <span className="text-2xl mr-3">{pkg.icon}</span>
+                          <div>
+                            <div className="font-semibold text-customer-ui-text-primary">
+                              {pkg.name}
+                            </div>
+                            <div className="text-sm text-customer-ui-text-tertiary">
+                              {pkg.description}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-2xl font-bold text-customer-brand-500">
+                          {pkg.price}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-lg font-semibold text-customer-ui-text-primary">
+                          Level {pkg.level}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="space-y-1">
+                          <div className="text-sm text-customer-ui-text-secondary">
+                            • Unlocks Level {pkg.level} Income Potential
+                          </div>
+                          <div className="text-sm text-customer-ui-text-secondary">
+                            • Grants entry into Level {pkg.level} {pkg.name}{" "}
+                            Auto Pool
+                          </div>
+                          <div className="text-sm text-customer-ui-text-secondary">
+                            • {pkg.benefits[2]}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <button
+                          onClick={() => setSelectedPackage(pkg.id)}
+                          className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                            selectedPackage === pkg.id
+                              ? "bg-customer-brand-500 text-white"
+                              : "bg-customer-brand-100 text-customer-brand-600 hover:bg-customer-brand-200"
+                          }`}
+                        >
+                          {selectedPackage === pkg.id
+                            ? "Selected"
+                            : "Select Package"}
+                        </button>
+                      </td>
+                    </tr>
                   ))}
-                  {pkg.features.length > 6 && (
-                    <div className="text-customer-brand-500 text-sm font-medium">
-                      +{pkg.features.length - 6} more features
-                    </div>
-                  )}
-                </div>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-                <button
-                  className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedPackage === pkg.id
-                      ? "bg-customer-brand-500 text-white hover:bg-customer-brand-600"
-                      : "bg-customer-ui-border text-customer-ui-text-primary hover:bg-customer-brand-100"
-                  }`}
-                >
-                  {selectedPackage === pkg.id ? "Selected" : "Select Package"}
-                </button>
+          {/* Important Disclaimer */}
+          <div className="bg-gradient-to-r from-customer-brand-50 to-customer-accent-50 rounded-2xl p-6 mb-8">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <Shield className="w-6 h-6 text-customer-brand-500" />
               </div>
-            ))}
+              <div className="ml-4">
+                <h3 className="text-lg font-semibold text-customer-ui-text-primary mb-2">
+                  Important Notice
+                </h3>
+                <p className="text-customer-ui-text-secondary">
+                  <strong>
+                    Your package level determines your earning potential across
+                    all income streams, especially the company Auto Pool.
+                  </strong>
+                  Higher packages unlock access to more lucrative Auto Pool
+                  levels with greater commission percentages and earning
+                  opportunities.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -240,7 +386,7 @@ const PackagesPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-customer-ui-text-primary mb-4">
-                {selectedPkg.name} - Complete Details
+                {selectedPkg.name} Package - Complete Details
               </h2>
               <p className="text-lg text-customer-ui-text-secondary">
                 Everything included in your selected package
@@ -248,68 +394,69 @@ const PackagesPage = () => {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-12">
-              {/* Features List */}
+              {/* Benefits List */}
               <div>
                 <h3 className="text-2xl font-semibold text-customer-ui-text-primary mb-6">
-                  All Features Included
+                  All Benefits Included
                 </h3>
                 <div className="space-y-4">
-                  {selectedPkg.features.map((feature, index) => (
+                  {selectedPkg.benefits.map((benefit, index) => (
                     <div key={index} className="flex items-start">
                       <Check className="w-6 h-6 text-customer-brand-500 mr-4 mt-0.5 flex-shrink-0" />
                       <span className="text-customer-ui-text-secondary">
-                        {feature}
+                        {benefit}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Earnings Potential */}
+              {/* Auto Pool Access Details */}
               <div>
                 <h3 className="text-2xl font-semibold text-customer-ui-text-primary mb-6">
-                  Earning Potential
+                  Auto Pool Access
                 </h3>
                 <div className="bg-gradient-to-br from-customer-brand-50 to-customer-accent-50 rounded-2xl p-8">
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="font-semibold text-customer-ui-text-primary">
-                          Direct Referrals
-                        </div>
-                        <div className="text-sm text-customer-ui-text-tertiary">
-                          Per successful referral
-                        </div>
+                  <div className="text-center mb-6">
+                    <div className="text-4xl mb-2">{selectedPkg.icon}</div>
+                    <h4 className="text-xl font-bold text-customer-ui-text-primary">
+                      Level {selectedPkg.level} {selectedPkg.name} Auto Pool
+                    </h4>
+                    <p className="text-customer-ui-text-secondary">
+                      Access to {selectedPkg.name} level Auto Pool with 8
+                      sub-levels
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="bg-white rounded-lg p-4">
+                      <div className="font-semibold text-customer-ui-text-primary mb-2">
+                        Auto Pool Benefits
                       </div>
-                      <div className="text-2xl font-bold text-customer-brand-500">
-                        {selectedPkg.earnings.direct}
-                      </div>
+                      <ul className="text-sm text-customer-ui-text-secondary space-y-1">
+                        <li>
+                          • Company-funded commissions (not from member fees)
+                        </li>
+                        <li>
+                          • 8 sub-levels with massive commission percentages
+                        </li>
+                        <li>• Automatic distribution as users advance</li>
+                        <li>• Higher levels = higher commission rates</li>
+                      </ul>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="font-semibold text-customer-ui-text-primary">
-                          Level 2 Commissions
-                        </div>
-                        <div className="text-sm text-customer-ui-text-tertiary">
-                          From your team's referrals
-                        </div>
+
+                    <div className="bg-white rounded-lg p-4">
+                      <div className="font-semibold text-customer-ui-text-primary mb-2">
+                        Income Streams Unlocked
                       </div>
-                      <div className="text-2xl font-bold text-customer-brand-500">
-                        {selectedPkg.earnings.level2}
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="font-semibold text-customer-ui-text-primary">
-                          Level 3 Commissions
-                        </div>
-                        <div className="text-sm text-customer-ui-text-tertiary">
-                          From your team's team
-                        </div>
-                      </div>
-                      <div className="text-2xl font-bold text-customer-brand-500">
-                        {selectedPkg.earnings.level3}
-                      </div>
+                      <ul className="text-sm text-customer-ui-text-secondary space-y-1">
+                        <li>• Level Income: 0.5 units per upline chain</li>
+                        <li>• Fast Track: Instant commissions on purchases</li>
+                        <li>• Club Income: 10-level matrix expansion</li>
+                        <li>
+                          • Auto Pool: Level {selectedPkg.level} pool access
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
