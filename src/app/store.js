@@ -6,36 +6,208 @@ export const useAuthStore = create(
   persist(
     (set, get) => ({
       user: null,
-      token: null,
+      accessToken: null,
+      refreshToken: null,
       isAuthenticated: false,
+      isLoading: false,
+      error: null,
 
-      login: (userData, token) => {
-        set({
-          user: userData,
-          token: token,
-          isAuthenticated: true,
-        });
-        localStorage.setItem("authToken", token);
+      login: async (credentials) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await fetch("http://localhost:8000/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credentials),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Login failed");
+          }
+
+          set({
+            user: data.data.user,
+            accessToken: data.data.access_token,
+            refreshToken: data.data.refresh_token,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null,
+          });
+
+          return { success: true, data: data.data };
+        } catch (error) {
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: error.message,
+          });
+          return { success: false, error: error.message };
+        }
       },
 
-      logout: () => {
-        set({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-        });
-        localStorage.removeItem("authToken");
+      register: async (userData) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await fetch("http://localhost:8000/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userData),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Registration failed");
+          }
+
+          set({
+            user: data.data.user,
+            accessToken: data.data.access_token,
+            refreshToken: data.data.refresh_token,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null,
+          });
+
+          return { success: true, data: data.data };
+        } catch (error) {
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: error.message,
+          });
+          return { success: false, error: error.message };
+        }
+      },
+
+      logout: async () => {
+        const { accessToken } = get();
+
+        try {
+          // Call logout API if token exists
+          if (accessToken) {
+            await fetch("http://localhost:8000/api/logout", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+              },
+            });
+          }
+        } catch (error) {
+          console.error("Logout API call failed:", error);
+        } finally {
+          // Clear local state regardless of API call result
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: null,
+          });
+        }
+      },
+
+      refreshToken: async () => {
+        const { refreshToken } = get();
+
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
+
+        try {
+          const response = await fetch("http://localhost:8000/api/refresh", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${refreshToken}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Token refresh failed");
+          }
+
+          set({
+            accessToken: data.data.access_token,
+            refreshToken: data.data.refresh_token,
+            error: null,
+          });
+
+          return { success: true, data: data.data };
+        } catch (error) {
+          // If refresh fails, logout user
+          get().logout();
+          throw error;
+        }
+      },
+
+      getProfile: async () => {
+        const { accessToken } = get();
+
+        if (!accessToken) {
+          throw new Error("No access token available");
+        }
+
+        try {
+          const response = await fetch("http://localhost:8000/api/me", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to get profile");
+          }
+
+          set({
+            user: data.data,
+            error: null,
+          });
+
+          return { success: true, data: data.data };
+        } catch (error) {
+          set({ error: error.message });
+          throw error;
+        }
       },
 
       updateUser: (userData) => {
         set({ user: userData });
+      },
+
+      clearError: () => set({ error: null }),
+
+      // Helper to get auth headers
+      getAuthHeaders: () => {
+        const { accessToken } = get();
+        return {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        };
       },
     }),
     {
       name: "auth-storage",
       partialize: (state) => ({
         user: state.user,
-        token: state.token,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
     }

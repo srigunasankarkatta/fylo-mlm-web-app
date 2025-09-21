@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, User, LogIn } from "lucide-react";
+import { useAuthStore } from "../../../app/store";
+import LogoutButton from "../components/LogoutButton";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, user } = useAuthStore();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -57,24 +60,44 @@ const Header = () => {
             >
               Contact
             </Link>
+            {isAuthenticated && (
+              <Link
+                to="/dashboard"
+                className="text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
+              >
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/login"
-              className="flex items-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium"
-            >
-              <LogIn className="w-4 h-4 mr-2" />
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="flex items-center px-6 py-2 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg transition-all duration-200 font-medium shadow-soft hover:shadow-medium"
-            >
-              <User className="w-4 h-4 mr-2" />
-              Register
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center px-4 py-2 text-customer-ui-text-primary">
+                  <User className="w-4 h-4 mr-2" />
+                  {user?.name || "User"}
+                </div>
+                <LogoutButton />
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="flex items-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="flex items-center px-6 py-2 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg transition-all duration-200 font-medium shadow-soft hover:shadow-medium"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Register
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -131,23 +154,46 @@ const Header = () => {
               >
                 Contact
               </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/dashboard"
+                  className="block px-3 py-2 text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+              )}
               <div className="pt-4 space-y-2">
-                <Link
-                  to="/login"
-                  className="w-full flex items-center justify-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="w-full flex items-center justify-center px-6 py-2 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg transition-all duration-200 font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <User className="w-4 h-4 mr-2" />
-                  Register
-                </Link>
+                {isAuthenticated ? (
+                  <>
+                    <div className="w-full flex items-center justify-center px-4 py-2 text-customer-ui-text-primary font-medium">
+                      <User className="w-4 h-4 mr-2" />
+                      {user?.name || "User"}
+                    </div>
+                    <div className="w-full flex justify-center">
+                      <LogoutButton className="w-full flex items-center justify-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium" />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="w-full flex items-center justify-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200 font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <LogIn className="w-4 h-4 mr-2" />
+                      Login
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="w-full flex items-center justify-center px-6 py-2 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg transition-all duration-200 font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Register
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -9,18 +10,34 @@ import {
   CheckCircle,
   Smartphone,
 } from "lucide-react";
+import { useAuthStore } from "../../../app/store";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const { login, isLoading, error, isAuthenticated, clearError } =
+    useAuthStore();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [loginMethod, setLoginMethod] = useState("email"); // email or phone
   const [errors, setErrors] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Clear errors when component mounts
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -64,18 +81,31 @@ const LoginPage = () => {
       return;
     }
 
-    setIsLoading(true);
+    setErrors({});
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const credentials = {
+        [loginMethod]: formData.email,
+        password: formData.password,
+      };
 
-    setIsLoading(false);
-    setIsSuccess(true);
+      const result = await login(credentials);
 
-    // Reset success message after 3 seconds
-    setTimeout(() => {
-      setIsSuccess(false);
-    }, 3000);
+      if (result.success) {
+        setIsSuccess(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        setErrors({
+          general: result.error || "Login failed. Please try again.",
+        });
+      }
+    } catch (error) {
+      setErrors({
+        general: error.message || "Login failed. Please try again.",
+      });
+    }
   };
 
   return (

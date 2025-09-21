@@ -9,6 +9,8 @@ import {
   ContactPage,
   LoginPage,
   RegisterPage,
+  DashboardPage,
+  ProtectedRoute,
 } from "./customer-portal";
 import "./index.css";
 
@@ -55,6 +57,18 @@ function App() {
             <CustomerLayout>
               <ContactPage />
             </CustomerLayout>
+          }
+        />
+
+        {/* Protected Dashboard Route */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <CustomerLayout>
+                <DashboardPage />
+              </CustomerLayout>
+            </ProtectedRoute>
           }
         />
 

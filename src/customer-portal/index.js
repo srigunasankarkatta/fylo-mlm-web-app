@@ -11,6 +11,7 @@ export * from "./features/packages";
 export * from "./features/faq";
 export * from "./features/contact";
 export * from "./features/auth";
+export * from "./features/dashboard";
 
 // Shared Components
 export * from "./shared/components";

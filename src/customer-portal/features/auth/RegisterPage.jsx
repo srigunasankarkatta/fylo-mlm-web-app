@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import {
   Mail,
   Lock,
@@ -8,681 +11,482 @@ import {
   ArrowRight,
   AlertCircle,
   CheckCircle,
-  Phone,
-  Building,
-  MapPin,
-  Calendar,
   UserPlus,
+  Phone,
 } from "lucide-react";
+import { useAuthStore } from "../../../app/store";
+
+// Yup validation schema matching backend API
+const validationSchema = Yup.object({
+  name: Yup.string()
+    .required("Name is required")
+    .max(150, "Name must not exceed 150 characters"),
+  email: Yup.string().nullable().email("Please enter a valid email address"),
+  phone: Yup.string().nullable().max(30, "Phone must not exceed 30 characters"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters"),
+  password_confirmation: Yup.string()
+    .required("Please confirm your password")
+    .oneOf([Yup.ref("password")], "Passwords must match"),
+  referral_code: Yup.string()
+    .nullable()
+    .max(20, "Referral code must not exceed 20 characters"),
+});
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-    company: "",
-    country: "",
-    dateOfBirth: "",
-    agreeToTerms: false,
-    agreeToMarketing: false,
-  });
+  const navigate = useNavigate();
+  const { register, isLoading, error, isAuthenticated, clearError } =
+    useAuthStore();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [errors, setErrors] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
+  const [loginMethod, setLoginMethod] = useState("email"); // email or phone
 
-  const countries = [
-    "United States",
-    "Canada",
-    "United Kingdom",
-    "Australia",
-    "Germany",
-    "France",
-    "Spain",
-    "Italy",
-    "Netherlands",
-    "Sweden",
-    "Norway",
-    "Denmark",
-    "Finland",
-    "Japan",
-    "South Korea",
-    "Singapore",
-    "India",
-    "Brazil",
-    "Mexico",
-    "Argentina",
-    "Other",
-  ];
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
     }
-  };
+  }, [isAuthenticated, navigate]);
 
-  const validateStep = (step) => {
-    const newErrors = {};
+  // Clear errors when component mounts
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
-    if (step === 1) {
-      if (!formData.firstName) newErrors.firstName = "First name is required";
-      if (!formData.lastName) newErrors.lastName = "Last name is required";
-      if (!formData.email) {
-        newErrors.email = "Email is required";
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.email = "Please enter a valid email address";
-      }
-      if (!formData.phone) newErrors.phone = "Phone number is required";
-    }
-
-    if (step === 2) {
-      if (!formData.password) {
-        newErrors.password = "Password is required";
-      } else if (formData.password.length < 8) {
-        newErrors.password = "Password must be at least 8 characters";
-      } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-        newErrors.password =
-          "Password must contain uppercase, lowercase, and number";
+  const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
+    try {
+      // Validate that at least one contact method is provided
+      if (!values.email && !values.phone) {
+        setFieldError(
+          "general",
+          "Please provide either an email address or phone number"
+        );
+        setSubmitting(false);
+        return;
       }
 
-      if (!formData.confirmPassword) {
-        newErrors.confirmPassword = "Please confirm your password";
-      } else if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = "Passwords do not match";
+      // Prepare data based on login method
+      const userData = {
+        name: values.name,
+        password: values.password,
+        password_confirmation: values.password_confirmation,
+        referral_code: values.referral_code || undefined,
+      };
+
+      // Add email or phone based on method
+      if (loginMethod === "email" && values.email) {
+        userData.email = values.email;
+      } else if (loginMethod === "phone" && values.phone) {
+        userData.phone = values.phone;
       }
+
+      const result = await register(userData);
+
+      if (result.success) {
+        setIsSuccess(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        setFieldError(
+          "general",
+          result.error || "Registration failed. Please try again."
+        );
+      }
+    } catch (error) {
+      setFieldError(
+        "general",
+        error.message || "Registration failed. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
-
-    if (step === 3) {
-      if (!formData.country) newErrors.country = "Country is required";
-      if (!formData.dateOfBirth)
-        newErrors.dateOfBirth = "Date of birth is required";
-      if (!formData.agreeToTerms)
-        newErrors.agreeToTerms = "You must agree to the terms";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
-
-  const handleNext = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep((prev) => prev + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateStep(3)) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    setIsLoading(false);
-    setIsSuccess(true);
-  };
-
-  const steps = [
-    {
-      number: 1,
-      title: "Personal Info",
-      description: "Basic information about you",
-    },
-    { number: 2, title: "Security", description: "Create your password" },
-    {
-      number: 3,
-      title: "Preferences",
-      description: "Additional details and agreements",
-    },
-  ];
 
   const passwordRequirements = [
-    { text: "At least 8 characters", met: formData.password.length >= 8 },
-    { text: "One uppercase letter", met: /[A-Z]/.test(formData.password) },
-    { text: "One lowercase letter", met: /[a-z]/.test(formData.password) },
-    { text: "One number", met: /\d/.test(formData.password) },
+    {
+      text: "At least 6 characters",
+      met: (password) => password && password.length >= 6,
+    },
+    {
+      text: "Passwords match",
+      met: (password, confirm) => password && confirm && password === confirm,
+    },
   ];
 
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen bg-customer-ui-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full text-center">
-          <CheckCircle className="w-20 h-20 text-customer-brand-500 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-customer-ui-text-primary mb-4">
-            Registration Successful!
-          </h2>
-          <p className="text-customer-ui-text-secondary mb-8">
-            Welcome to Fylo MLM! Your account has been created successfully.
-            Please check your email to verify your account.
-          </p>
-          <button className="px-8 py-3 bg-customer-brand-500 text-white rounded-xl font-semibold hover:bg-customer-brand-600 transition-colors duration-200">
-            Continue to Dashboard
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-customer-ui-background py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-customer-ui-background flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl w-full space-y-6">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-customer-brand-500 rounded-2xl flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">F</span>
+        <div className="text-center">
+          <div className="flex justify-center mb-4">
+            <div className="w-12 h-12 bg-customer-brand-500 rounded-xl flex items-center justify-center">
+              <UserPlus className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-customer-ui-text-primary">
-            Join Fylo MLM
-          </h2>
-          <p className="mt-2 text-customer-ui-text-secondary">
-            Start your MLM journey and build your network today
+          <h1 className="text-2xl font-bold text-customer-ui-text-primary mb-2">
+            Create Your Account
+          </h1>
+          <p className="text-sm text-customer-ui-text-secondary">
+            Join thousands of successful entrepreneurs and start building your
+            MLM empire today.
           </p>
-        </div>
-
-        {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div key={step.number} className="flex items-center">
-                <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                    currentStep >= step.number
-                      ? "bg-customer-brand-500 border-customer-brand-500 text-white"
-                      : "border-customer-ui-border text-customer-ui-text-tertiary"
-                  }`}
-                >
-                  {currentStep > step.number ? (
-                    <CheckCircle className="w-5 h-5" />
-                  ) : (
-                    <span className="text-sm font-semibold">{step.number}</span>
-                  )}
-                </div>
-                <div className="ml-3 hidden sm:block">
-                  <p
-                    className={`text-sm font-medium ${
-                      currentStep >= step.number
-                        ? "text-customer-ui-text-primary"
-                        : "text-customer-ui-text-tertiary"
-                    }`}
-                  >
-                    {step.title}
-                  </p>
-                  <p className="text-xs text-customer-ui-text-tertiary">
-                    {step.description}
-                  </p>
-                </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`hidden sm:block w-16 h-0.5 mx-4 ${
-                      currentStep > step.number
-                        ? "bg-customer-brand-500"
-                        : "bg-customer-ui-border"
-                    }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Registration Form */}
-        <div className="bg-customer-ui-surface rounded-3xl shadow-soft p-8">
-          <form onSubmit={handleSubmit}>
-            {/* Step 1: Personal Information */}
-            {currentStep === 1 && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-customer-ui-text-primary mb-6">
-                  Personal Information
-                </h3>
+        <div className="bg-customer-ui-surface rounded-2xl shadow-soft p-6">
+          <Formik
+            initialValues={{
+              name: "",
+              email: "",
+              phone: "",
+              password: "",
+              password_confirmation: "",
+              referral_code: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ values, isSubmitting, errors, touched }) => (
+              <Form className="space-y-4">
+                {/* Login Method Toggle */}
+                <div className="flex justify-center mb-6">
+                  <button
+                    type="button"
+                    onClick={() => setLoginMethod("email")}
+                    className={`px-6 py-2 rounded-l-xl text-sm font-medium transition-all duration-200 ${
+                      loginMethod === "email"
+                        ? "bg-customer-brand-500 text-white shadow-md"
+                        : "bg-customer-ui-border text-customer-ui-text-secondary hover:bg-customer-brand-100"
+                    }`}
+                  >
+                    Email
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLoginMethod("phone")}
+                    className={`px-6 py-2 rounded-r-xl text-sm font-medium transition-all duration-200 ${
+                      loginMethod === "phone"
+                        ? "bg-customer-brand-500 text-white shadow-md"
+                        : "bg-customer-ui-border text-customer-ui-text-secondary hover:bg-customer-brand-100"
+                    }`}
+                  >
+                    Phone
+                  </button>
+                </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                {/* Row 1: Name and Email/Phone */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Name Field */}
                   <div>
-                    <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                      First Name *
+                    <label className="block text-sm font-medium text-customer-ui-text-primary mb-1">
+                      Full Name *
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                      <input
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-4 h-4" />
+                      <Field
                         type="text"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
-                          errors.firstName
+                        name="name"
+                        className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
+                          errors.name && touched.name
                             ? "border-red-300"
                             : "border-customer-ui-border"
                         }`}
-                        placeholder="Enter your first name"
+                        placeholder="Enter your full name"
                       />
                     </div>
-                    {errors.firstName && (
-                      <div className="flex items-center mt-2 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4 mr-1" />
-                        {errors.firstName}
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                      Last Name *
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
-                          errors.lastName
-                            ? "border-red-300"
-                            : "border-customer-ui-border"
-                        }`}
-                        placeholder="Enter your last name"
-                      />
-                    </div>
-                    {errors.lastName && (
-                      <div className="flex items-center mt-2 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4 mr-1" />
-                        {errors.lastName}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                    Email Address *
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
-                        errors.email
-                          ? "border-red-300"
-                          : "border-customer-ui-border"
-                      }`}
-                      placeholder="Enter your email address"
-                    />
-                  </div>
-                  {errors.email && (
-                    <div className="flex items-center mt-2 text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.email}
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                    Phone Number *
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
-                        errors.phone
-                          ? "border-red-300"
-                          : "border-customer-ui-border"
-                      }`}
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
-                  {errors.phone && (
-                    <div className="flex items-center mt-2 text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.phone}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Step 2: Security */}
-            {currentStep === 2 && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-customer-ui-text-primary mb-6">
-                  Create Your Password
-                </h3>
-
-                <div>
-                  <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                    Password *
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
-                        errors.password
-                          ? "border-red-300"
-                          : "border-customer-ui-border"
-                      }`}
-                      placeholder="Create a strong password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary hover:text-customer-ui-text-primary"
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="flex items-center mt-1 text-red-600 text-xs"
                     >
-                      {showPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
+                      {(msg) => (
+                        <div className="flex items-center">
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                          {msg}
+                        </div>
                       )}
-                    </button>
+                    </ErrorMessage>
                   </div>
-                  {errors.password && (
-                    <div className="flex items-center mt-2 text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.password}
+
+                  {/* Email/Phone Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-customer-ui-text-primary mb-1">
+                      {loginMethod === "email"
+                        ? "Email Address"
+                        : "Phone Number"}{" "}
+                      (Optional)
+                    </label>
+                    <div className="relative">
+                      {loginMethod === "email" ? (
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-4 h-4" />
+                      ) : (
+                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-4 h-4" />
+                      )}
+                      <Field
+                        type={loginMethod === "email" ? "email" : "tel"}
+                        name={loginMethod === "email" ? "email" : "phone"}
+                        className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
+                          (loginMethod === "email"
+                            ? errors.email
+                            : errors.phone) &&
+                          (loginMethod === "email"
+                            ? touched.email
+                            : touched.phone)
+                            ? "border-red-300"
+                            : "border-customer-ui-border"
+                        }`}
+                        placeholder={
+                          loginMethod === "email"
+                            ? "Enter your email address"
+                            : "Enter your phone number"
+                        }
+                      />
                     </div>
-                  )}
+                    <ErrorMessage
+                      name={loginMethod === "email" ? "email" : "phone"}
+                      component="div"
+                      className="flex items-center mt-1 text-red-600 text-xs"
+                    >
+                      {(msg) => (
+                        <div className="flex items-center">
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                          {msg}
+                        </div>
+                      )}
+                    </ErrorMessage>
+                  </div>
+                </div>
+
+                {/* Row 2: Referral Code */}
+                <div>
+                  <label className="block text-sm font-medium text-customer-ui-text-primary mb-1">
+                    Referral Code (Optional)
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-4 h-4" />
+                    <Field
+                      type="text"
+                      name="referral_code"
+                      className={`w-full pl-9 pr-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
+                        errors.referral_code && touched.referral_code
+                          ? "border-red-300"
+                          : "border-customer-ui-border"
+                      }`}
+                      placeholder="Enter referral code (if any)"
+                    />
+                  </div>
+                  <ErrorMessage
+                    name="referral_code"
+                    component="div"
+                    className="flex items-center mt-1 text-red-600 text-xs"
+                  >
+                    {(msg) => (
+                      <div className="flex items-center">
+                        <AlertCircle className="w-3 h-3 mr-1" />
+                        {msg}
+                      </div>
+                    )}
+                  </ErrorMessage>
+                  <p className="text-xs text-customer-ui-text-tertiary mt-1">
+                    If someone referred you, enter their referral code here
+                  </p>
+                </div>
+
+                {/* Row 3: Password and Confirm Password */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Password Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-customer-ui-text-primary mb-1">
+                      Password *
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-4 h-4" />
+                      <Field
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        className={`w-full pl-9 pr-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
+                          errors.password && touched.password
+                            ? "border-red-300"
+                            : "border-customer-ui-border"
+                        }`}
+                        placeholder="Create a strong password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary hover:text-customer-ui-text-primary"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="flex items-center mt-1 text-red-600 text-xs"
+                    >
+                      {(msg) => (
+                        <div className="flex items-center">
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                          {msg}
+                        </div>
+                      )}
+                    </ErrorMessage>
+                  </div>
+
+                  {/* Confirm Password Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-customer-ui-text-primary mb-1">
+                      Confirm Password *
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-4 h-4" />
+                      <Field
+                        type={showConfirmPassword ? "text" : "password"}
+                        name="password_confirmation"
+                        className={`w-full pl-9 pr-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
+                          errors.password_confirmation &&
+                          touched.password_confirmation
+                            ? "border-red-300"
+                            : "border-customer-ui-border"
+                        }`}
+                        placeholder="Confirm your password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary hover:text-customer-ui-text-primary"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                    <ErrorMessage
+                      name="password_confirmation"
+                      component="div"
+                      className="flex items-center mt-1 text-red-600 text-xs"
+                    >
+                      {(msg) => (
+                        <div className="flex items-center">
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                          {msg}
+                        </div>
+                      )}
+                    </ErrorMessage>
+                  </div>
                 </div>
 
                 {/* Password Requirements */}
-                <div className="bg-customer-brand-50 rounded-xl p-4">
-                  <h4 className="text-sm font-medium text-customer-ui-text-primary mb-3">
-                    Password Requirements:
-                  </h4>
-                  <div className="space-y-2">
-                    {passwordRequirements.map((req, index) => (
-                      <div key={index} className="flex items-center">
-                        <div
-                          className={`w-4 h-4 rounded-full mr-3 flex items-center justify-center ${
-                            req.met
-                              ? "bg-customer-brand-500"
-                              : "bg-customer-ui-border"
-                          }`}
-                        >
-                          {req.met && (
-                            <CheckCircle className="w-3 h-3 text-white" />
-                          )}
-                        </div>
-                        <span
-                          className={`text-sm ${
-                            req.met
-                              ? "text-customer-ui-text-primary"
-                              : "text-customer-ui-text-tertiary"
-                          }`}
-                        >
-                          {req.text}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                    Confirm Password *
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
-                        errors.confirmPassword
-                          ? "border-red-300"
-                          : "border-customer-ui-border"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {passwordRequirements.map((requirement, index) => (
+                    <div
+                      key={index}
+                      className={`flex items-center text-xs ${
+                        requirement.met(
+                          values.password,
+                          values.password_confirmation
+                        )
+                          ? "text-green-600"
+                          : "text-customer-ui-text-tertiary"
                       }`}
-                      placeholder="Confirm your password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary hover:text-customer-ui-text-primary"
                     >
-                      {showConfirmPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </button>
-                  </div>
-                  {errors.confirmPassword && (
-                    <div className="flex items-center mt-2 text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.confirmPassword}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Step 3: Preferences */}
-            {currentStep === 3 && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-customer-ui-text-primary mb-6">
-                  Additional Information
-                </h3>
-
-                <div>
-                  <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                    Company (Optional)
-                  </label>
-                  <div className="relative">
-                    <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                    <input
-                      type="text"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-customer-ui-border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent"
-                      placeholder="Enter your company name"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                      Country *
-                    </label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                      <select
-                        name="country"
-                        value={formData.country}
-                        onChange={handleInputChange}
-                        className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent appearance-none ${
-                          errors.country
-                            ? "border-red-300"
-                            : "border-customer-ui-border"
+                      <div
+                        className={`w-3 h-3 rounded-full mr-2 flex items-center justify-center ${
+                          requirement.met(
+                            values.password,
+                            values.password_confirmation
+                          )
+                            ? "bg-green-100"
+                            : "bg-customer-ui-border"
                         }`}
                       >
-                        <option value="">Select your country</option>
-                        {countries.map((country) => (
-                          <option key={country} value={country}>
-                            {country}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {errors.country && (
-                      <div className="flex items-center mt-2 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4 mr-1" />
-                        {errors.country}
+                        {requirement.met(
+                          values.password,
+                          values.password_confirmation
+                        ) && <CheckCircle className="w-2 h-2 text-green-600" />}
                       </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-customer-ui-text-primary mb-2">
-                      Date of Birth *
-                    </label>
-                    <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-customer-ui-text-tertiary w-5 h-5" />
-                      <input
-                        type="date"
-                        name="dateOfBirth"
-                        value={formData.dateOfBirth}
-                        onChange={handleInputChange}
-                        className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-customer-brand-500 focus:border-transparent ${
-                          errors.dateOfBirth
-                            ? "border-red-300"
-                            : "border-customer-ui-border"
-                        }`}
-                      />
+                      {requirement.text}
                     </div>
-                    {errors.dateOfBirth && (
-                      <div className="flex items-center mt-2 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4 mr-1" />
-                        {errors.dateOfBirth}
-                      </div>
-                    )}
-                  </div>
+                  ))}
                 </div>
 
-                {/* Agreements */}
-                <div className="space-y-4">
-                  <div className="flex items-start">
-                    <input
-                      id="agreeToTerms"
-                      name="agreeToTerms"
-                      type="checkbox"
-                      checked={formData.agreeToTerms}
-                      onChange={handleInputChange}
-                      className="h-4 w-4 text-customer-brand-500 focus:ring-customer-brand-500 border-customer-ui-border rounded mt-1"
-                    />
-                    <label
-                      htmlFor="agreeToTerms"
-                      className="ml-3 block text-sm text-customer-ui-text-secondary"
-                    >
-                      I agree to the{" "}
-                      <button className="text-customer-brand-500 hover:text-customer-brand-600 font-medium">
-                        Terms of Service
-                      </button>{" "}
-                      and{" "}
-                      <button className="text-customer-brand-500 hover:text-customer-brand-600 font-medium">
-                        Privacy Policy
-                      </button>{" "}
-                      *
-                    </label>
-                  </div>
-                  {errors.agreeToTerms && (
-                    <div className="flex items-center text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.agreeToTerms}
+                {/* Error Message */}
+                {error && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <div className="flex items-center">
+                      <AlertCircle className="w-4 h-4 text-red-500 mr-2" />
+                      <p className="text-red-700 text-xs">{error}</p>
                     </div>
-                  )}
-
-                  <div className="flex items-start">
-                    <input
-                      id="agreeToMarketing"
-                      name="agreeToMarketing"
-                      type="checkbox"
-                      checked={formData.agreeToMarketing}
-                      onChange={handleInputChange}
-                      className="h-4 w-4 text-customer-brand-500 focus:ring-customer-brand-500 border-customer-ui-border rounded mt-1"
-                    />
-                    <label
-                      htmlFor="agreeToMarketing"
-                      className="ml-3 block text-sm text-customer-ui-text-secondary"
-                    >
-                      I would like to receive marketing communications and
-                      updates about new features
-                    </label>
                   </div>
-                </div>
-              </div>
-            )}
+                )}
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8">
-              <button
-                type="button"
-                onClick={handlePrevious}
-                disabled={currentStep === 1}
-                className="px-6 py-3 border border-customer-ui-border text-customer-ui-text-primary rounded-xl font-medium hover:bg-customer-ui-background disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-              >
-                Previous
-              </button>
+                {/* General Error Message */}
+                {errors.general && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <div className="flex items-center">
+                      <AlertCircle className="w-4 h-4 text-red-500 mr-2" />
+                      <p className="text-red-700 text-xs">{errors.general}</p>
+                    </div>
+                  </div>
+                )}
 
-              {currentStep < 3 ? (
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="px-6 py-3 bg-customer-brand-500 text-white rounded-xl font-medium hover:bg-customer-brand-600 transition-all duration-200 flex items-center"
-                >
-                  Next
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </button>
-              ) : (
+                {/* Success Message */}
+                {isSuccess && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <div className="flex items-center">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      <p className="text-green-700 text-xs">
+                        Registration successful! Redirecting to dashboard...
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={isLoading}
-                  className="px-8 py-3 bg-customer-brand-500 text-white rounded-xl font-medium hover:bg-customer-brand-600 disabled:bg-customer-brand-300 disabled:cursor-not-allowed transition-all duration-200 flex items-center"
+                  disabled={isSubmitting || isLoading}
+                  className="w-full flex items-center justify-center px-4 py-2.5 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg font-semibold transition-all duration-200 shadow-soft hover:shadow-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? (
+                  {isSubmitting || isLoading ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                       Creating Account...
                     </>
                   ) : (
                     <>
-                      <UserPlus className="w-4 h-4 mr-2" />
                       Create Account
+                      <ArrowRight className="w-4 h-4 ml-2" />
                     </>
                   )}
                 </button>
-              )}
-            </div>
-          </form>
+              </Form>
+            )}
+          </Formik>
         </div>
 
         {/* Login Link */}
-        <div className="text-center mt-6">
-          <p className="text-customer-ui-text-secondary">
+        <div className="text-center">
+          <p className="text-sm text-customer-ui-text-secondary">
             Already have an account?{" "}
-            <a
-              href="/login"
-              className="text-customer-brand-500 hover:text-customer-brand-600 font-medium"
+            <button
+              onClick={() => navigate("/login")}
+              className="text-customer-brand-500 hover:text-customer-brand-600 font-medium transition-colors duration-200"
             >
               Sign in here
-            </a>
+            </button>
           </p>
         </div>
       </div>
