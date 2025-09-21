@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowRight, PlayCircle } from "lucide-react";
+import { MLMTree } from "../../shared/components";
 
 const HeroSection = () => {
   return (
@@ -7,6 +8,12 @@ const HeroSection = () => {
       {/* Animated Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-customer-brand-50 via-customer-ui-background to-customer-accent-50">
         <div className="absolute inset-0 bg-gradient-to-r from-customer-brand-500/5 to-customer-accent-500/5 animate-pulse"></div>
+
+        {/* MLM Tree Background */}
+        <div className="absolute inset-0">
+          <MLMTree className="heroBackground" />
+        </div>
+
         {/* Floating geometric shapes */}
         <div className="absolute top-20 left-10 w-20 h-20 bg-customer-brand-200/30 rounded-full animate-bounce"></div>
         <div className="absolute top-40 right-20 w-16 h-16 bg-customer-accent-200/30 rounded-lg rotate-45 animate-pulse"></div>

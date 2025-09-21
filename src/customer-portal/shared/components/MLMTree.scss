@@ -1,0 +1,160 @@
+.mlmTreeContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+
+  .treeWrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    // Tree container styles
+    .rd3t-tree-container {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    // SVG styles
+    svg {
+      width: 100% !important;
+      height: 100% !important;
+      overflow: visible;
+    }
+
+    // Node styles
+    .nodeCircle {
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      transition: all 0.3s ease;
+
+      &:hover {
+        filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
+        transform: scale(1.05);
+      }
+    }
+
+    .nodeText {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    .detailText {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    // Link styles
+    .treeLink {
+      stroke: #3b82f6;
+      stroke-width: 2;
+      fill: none;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+
+      &:hover {
+        stroke: #1d4ed8;
+        stroke-width: 3;
+        opacity: 0.8;
+      }
+    }
+
+    // Animation for nodes
+    .nodeCircle {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    // Hover effects
+    g:hover {
+      .nodeCircle {
+        filter: drop-shadow(0 8px 16px rgba(59, 130, 246, 0.3));
+        transform: scale(1.1);
+      }
+
+      .nodeText {
+        fill: #1d4ed8;
+        font-weight: 700;
+      }
+
+      .detailText {
+        fill: #475569;
+      }
+    }
+
+    // Responsive adjustments
+    @media (max-width: 768px) {
+      .nodeCircle {
+        r: 20 !important;
+      }
+
+      .nodeText {
+        font-size: 12px !important;
+      }
+
+      .detailText {
+        font-size: 8px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nodeCircle {
+        r: 16 !important;
+      }
+
+      .nodeText {
+        font-size: 10px !important;
+      }
+
+      .detailText {
+        font-size: 6px !important;
+      }
+    }
+  }
+}
+
+// Background overlay for hero section
+.mlmTreeContainer.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  opacity: 0.15;
+  pointer-events: none;
+
+  .treeWrapper {
+    .nodeCircle {
+      fill: #3b82f6;
+      stroke: #1d4ed8;
+      stroke-width: 1;
+    }
+
+    .nodeText {
+      fill: #1e293b;
+      font-weight: 500;
+    }
+
+    .detailText {
+      fill: #64748b;
+    }
+
+    .treeLink {
+      stroke: #3b82f6;
+      stroke-width: 1;
+      opacity: 0.4;
+    }
+  }
+}
