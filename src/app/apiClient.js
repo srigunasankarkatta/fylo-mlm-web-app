@@ -3,7 +3,7 @@ import { useAuthStore } from "./store";
 
 // Create axios instance with default configuration
 const apiClient = axios.create({
-  baseURL: process.env.VITE_API_BASE_URL || "http://localhost:8000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

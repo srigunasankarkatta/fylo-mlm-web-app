@@ -12,6 +12,7 @@ import {
   DashboardPage,
   ProtectedRoute,
 } from "./customer-portal";
+import PackageManagementPage from "./customer-portal/features/packages/PackageManagementPage";
 import "./index.css";
 
 function App() {
@@ -41,6 +42,16 @@ function App() {
             <CustomerLayout>
               <PackagesPage />
             </CustomerLayout>
+          }
+        />
+        <Route
+          path="/packages/manage"
+          element={
+            <ProtectedRoute>
+              <CustomerLayout>
+                <PackageManagementPage />
+              </CustomerLayout>
+            </ProtectedRoute>
           }
         />
         <Route
