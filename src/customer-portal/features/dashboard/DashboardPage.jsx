@@ -367,8 +367,6 @@ const DashboardPage = () => {
           )}
         </div>
 
- 
-
         {/* Tab Navigation */}
         <div className="mb-8 border-b border-customer-ui-border">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
