@@ -23,3 +23,4 @@ export * from "./utils/helpers";
 
 // Store
 export * from "./store/packageStore";
+export * from "./store/dashboardStore";

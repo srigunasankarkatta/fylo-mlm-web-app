@@ -1,117 +1,334 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../../../app/store";
-import LogoutButton from "../../shared/components/LogoutButton";
-import {
-  DollarSign,
-  Users,
-  TrendingUp,
-  Award,
-  ShieldCheck,
-  Zap,
-  RefreshCcw,
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  Key,
-  Crown,
-  Activity,
-  AlertCircle,
-  Network,
-  BarChart3,
-  Wallet,
-  Target,
-} from "lucide-react";
+import { useDashboardStore } from "../../store/dashboardStore";
+import { OverviewTab, ProfileTab, NetworkTab, EarningsTab } from "./components";
+import { Activity, User, Network, Wallet, AlertCircle } from "lucide-react";
 
 const DashboardPage = () => {
-  const { user, getProfile, isLoading, error } = useAuthStore();
+  const {
+    user,
+    isAuthenticated,
+    getProfile,
+    isLoading: authLoading,
+    error: authError,
+  } = useAuthStore();
+  const {
+    dashboardSummary,
+    userProfile,
+    networkTree,
+    networkStats,
+    networkMembers,
+    earningsSummary,
+    earningsHistory,
+    earningsByType,
+    walletDetails,
+    recentActivity,
+    quickStats,
+    performanceAnalytics,
+    dashboardWidgets,
+    isLoading,
+    errors,
+    pagination,
+    fetchDashboardSummary,
+    fetchUserProfile,
+    fetchNetworkTree,
+    fetchNetworkStats,
+    fetchNetworkMembers,
+    fetchEarningsSummary,
+    fetchEarningsHistory,
+    fetchEarningsByType,
+    fetchWalletDetails,
+    fetchLedgerTransactions,
+    fetchRecentActivity,
+    fetchQuickStats,
+    fetchPerformanceAnalytics,
+    fetchDashboardWidgets,
+    updateUserProfile,
+    changePassword,
+  } = useDashboardStore();
+
   const [activeTab, setActiveTab] = useState("overview");
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [passwordForm, setPasswordForm] = useState({
+    current_password: "",
+    new_password: "",
+    new_password_confirmation: "",
+  });
+  const [successMessage, setSuccessMessage] = useState("");
+  const [networkFilters, setNetworkFilters] = useState({
+    level: "",
+    status: "",
+    page: 1,
+    per_page: 10,
+  });
 
   useEffect(() => {
-    // Fetch latest user profile data
-    getProfile().catch(console.error);
-  }, [getProfile]);
+    // Debug authentication state
+    console.log(
+      "Dashboard useEffect - User:",
+      user,
+      "Authenticated:",
+      isAuthenticated
+    );
 
-  // Mock earnings data - will be replaced with actual API calls
-  const earningsData = {
-    totalEarnings: 2450.0,
-    levelIncome: 1200.0,
-    fastTrackIncome: 800.0,
-    clubIncome: 300.0,
-    autoPoolIncome: 150.0,
-    thisMonth: 450.0,
-    lastMonth: 380.0,
+    // Only fetch data if user is authenticated
+    if (user && isAuthenticated) {
+      const fetchOverviewData = async () => {
+        try {
+          console.log("Fetching dashboard data...");
+          await Promise.all([
+            fetchDashboardSummary(),
+            fetchQuickStats(),
+            fetchRecentActivity(),
+            fetchDashboardWidgets(),
+          ]);
+          console.log("Dashboard data fetched successfully");
+        } catch (error) {
+          console.error("Failed to fetch dashboard data:", error);
+        }
+      };
+
+      fetchOverviewData();
+    } else {
+      console.log("User not authenticated, skipping dashboard data fetch");
+    }
+  }, [
+    user,
+    isAuthenticated,
+    fetchDashboardSummary,
+    fetchQuickStats,
+    fetchRecentActivity,
+    fetchDashboardWidgets,
+  ]);
+
+  // Initialize profile form when userProfile is loaded
+  useEffect(() => {
+    if (userProfile?.user) {
+      setProfileForm({
+        name: userProfile.user.name || "",
+        email: userProfile.user.email || "",
+        phone: userProfile.user.phone || "",
+      });
+    }
+  }, [userProfile]);
+
+  // Auto-apply network filters when they change
+  useEffect(() => {
+    if (
+      activeTab === "network" &&
+      (networkFilters.level || networkFilters.status)
+    ) {
+      applyNetworkFilters();
+    }
+  }, [networkFilters.level, networkFilters.status, networkFilters.per_page]);
+
+  // Auto-fetch network members when page changes
+  useEffect(() => {
+    if (activeTab === "network" && networkFilters.page > 1) {
+      fetchNetworkMembers(networkFilters);
+    }
+  }, [networkFilters.page]);
+
+  // Handle tab changes and fetch data accordingly
+  const handleTabChange = async (tabId) => {
+    setActiveTab(tabId);
+    setSuccessMessage(""); // Clear any success messages
+
+    // Fetch data based on the selected tab
+    switch (tabId) {
+      case "profile":
+        if (!userProfile) {
+          await fetchUserProfile();
+        }
+        break;
+      case "network":
+        if (!networkTree || !networkStats) {
+          await Promise.all([
+            fetchNetworkTree(),
+            fetchNetworkStats(),
+            fetchNetworkMembers(),
+          ]);
+        }
+        break;
+      case "earnings":
+        if (!earningsSummary || !earningsByType || walletDetails.length === 0) {
+          await Promise.all([
+            fetchEarningsSummary(),
+            fetchEarningsByType(),
+            fetchWalletDetails(),
+          ]);
+        }
+        break;
+      default:
+        break;
+    }
   };
 
-  const stats = [
-    {
-      title: "Total Earnings",
-      value: `$${earningsData.totalEarnings.toLocaleString()}`,
-      change: "+12.5%",
-      icon: <DollarSign className="w-8 h-8" />,
-      color: "text-green-500",
-      bgColor: "bg-green-100",
-    },
-    {
-      title: "Team Members",
-      value: "24",
-      change: "+3 this week",
-      icon: <Users className="w-8 h-8" />,
-      color: "text-blue-500",
-      bgColor: "bg-blue-100",
-    },
-    {
-      title: "Direct Referrals",
-      value: "8",
-      change: "+2 this month",
-      icon: <TrendingUp className="w-8 h-8" />,
-      color: "text-purple-500",
-      bgColor: "bg-purple-100",
-    },
-    {
-      title: "Current Rank",
-      value: "Gold Executive",
-      change: "Level 3",
-      icon: <Award className="w-8 h-8" />,
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-100",
-    },
-  ];
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+    const result = await updateUserProfile(profileForm);
+    if (result.success) {
+      setIsEditingProfile(false);
+      setSuccessMessage("Profile updated successfully!");
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(""), 3000);
+    }
+  };
 
-  const earningsTypes = [
-    {
-      name: "Level Income",
-      amount: earningsData.levelIncome,
-      description: "Earnings from your downline levels",
-      icon: <BarChart3 className="w-5 h-5" />,
-      color: "text-blue-500",
-      bgColor: "bg-blue-50",
-    },
-    {
-      name: "Fast Track Income",
-      amount: earningsData.fastTrackIncome,
-      description: "Instant earnings from direct referrals",
-      icon: <Zap className="w-5 h-5" />,
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-50",
-    },
-    {
-      name: "Club Income",
-      amount: earningsData.clubIncome,
-      description: "Earnings from club matrix system",
-      icon: <Users className="w-5 h-5" />,
-      color: "text-purple-500",
-      bgColor: "bg-purple-50",
-    },
-    {
-      name: "Auto Pool Income",
-      amount: earningsData.autoPoolIncome,
-      description: "Company-funded pool earnings",
-      icon: <Target className="w-5 h-5" />,
-      color: "text-green-500",
-      bgColor: "bg-green-50",
-    },
-  ];
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    const result = await changePassword(passwordForm);
+    if (result.success) {
+      setIsChangingPassword(false);
+      setPasswordForm({
+        current_password: "",
+        new_password: "",
+        new_password_confirmation: "",
+      });
+      setSuccessMessage("Password changed successfully!");
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(""), 3000);
+    }
+  };
+
+  // Network filtering and pagination
+  const handleNetworkFilterChange = (key, value) => {
+    setNetworkFilters((prev) => ({
+      ...prev,
+      [key]: value,
+      page: 1, // Reset to first page when filters change
+    }));
+  };
+
+  const handleNetworkPageChange = (newPage) => {
+    setNetworkFilters((prev) => ({
+      ...prev,
+      page: newPage,
+    }));
+  };
+
+  const applyNetworkFilters = async () => {
+    await fetchNetworkMembers(networkFilters);
+  };
+
+  const clearNetworkFilters = () => {
+    setNetworkFilters({
+      level: "",
+      status: "",
+      page: 1,
+      per_page: 10,
+    });
+  };
+
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount || 0);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status?.toLowerCase()) {
+      case "active":
+      case "completed":
+      case "paid":
+        return <div className="w-4 h-4 bg-green-500 rounded-full"></div>;
+      case "pending":
+        return <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>;
+      case "inactive":
+      case "failed":
+        return <div className="w-4 h-4 bg-red-500 rounded-full"></div>;
+      default:
+        return <div className="w-4 h-4 bg-gray-500 rounded-full"></div>;
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "active":
+      case "completed":
+      case "paid":
+        return "bg-green-100 text-green-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "inactive":
+      case "failed":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-customer-ui-background">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-customer-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-customer-ui-text-primary">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (authError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 text-red-700 p-4">
+        <AlertCircle className="w-12 h-12 mb-4" />
+        <h2 className="text-xl font-semibold mb-2">Error Loading Dashboard</h2>
+        <p className="text-center mb-4">{authError}</p>
+        <button
+          onClick={() => getProfile()}
+          className="flex items-center px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-all duration-200"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!user || !isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-customer-ui-background text-customer-ui-text-primary p-4">
+        <AlertCircle className="w-16 h-16 text-customer-brand-500 mb-4" />
+        <h2 className="text-2xl font-bold mb-2">Authentication Required</h2>
+        <p className="text-center mb-6 text-customer-ui-text-secondary">
+          Please log in to access your dashboard.
+        </p>
+        <button
+          onClick={() => (window.location.href = "/login")}
+          className="flex items-center px-6 py-3 bg-customer-brand-500 hover:bg-customer-brand-600 text-white rounded-lg font-semibold transition-all duration-200"
+        >
+          Go to Login
+        </button>
+      </div>
+    );
+  }
 
   const tabs = [
     {
@@ -128,381 +345,145 @@ const DashboardPage = () => {
     { id: "earnings", name: "Earnings", icon: <Wallet className="w-5 h-5" /> },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-customer-ui-background">
-        <div className="text-center">
-          <div className="w-10 h-10 border-4 border-customer-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-customer-ui-text-primary">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 text-red-700 p-4">
-        <AlertCircle className="w-12 h-12 mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Error Loading Dashboard</h2>
-        <p className="text-center mb-4">{error}</p>
-        <button
-          onClick={() => getProfile()}
-          className="flex items-center px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-all duration-200"
-        >
-          <RefreshCcw className="w-5 h-5 mr-2" />
-          Retry
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-customer-ui-background">
-      {/* Header */}
-      <div className="bg-customer-ui-surface border-b border-customer-ui-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div>
-              <h1 className="text-2xl font-bold text-customer-ui-text-primary">
-                Dashboard
-              </h1>
-              <p className="text-sm text-customer-ui-text-secondary">
-                Welcome back, {user?.name || "User"}
-              </p>
-            </div>
-            <LogoutButton />
-          </div>
+    <div className="min-h-screen bg-customer-ui-background p-4 sm:p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-customer-ui-text-primary">
+            Welcome, {user?.name || "Member"}!
+          </h1>
+          {activeTab === "overview" && (
+            <button
+              onClick={() => {
+                fetchDashboardSummary();
+                fetchQuickStats();
+                fetchRecentActivity();
+                fetchDashboardWidgets();
+              }}
+              className="flex items-center px-4 py-2 text-customer-brand-500 hover:text-customer-brand-600 transition-colors duration-200"
+            >
+              Refresh Dashboard
+            </button>
+          )}
         </div>
-      </div>
 
-      {/* Tab Navigation */}
-      <div className="bg-customer-ui-surface border-b border-customer-ui-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
+ 
+
+        {/* Tab Navigation */}
+        <div className="mb-8 border-b border-customer-ui-border">
+          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center px-1 py-4 text-sm font-medium border-b-2 transition-colors duration-200 ${
+                onClick={() => handleTabChange(tab.id)}
+                className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
                   activeTab === tab.id
                     ? "border-customer-brand-500 text-customer-brand-600"
-                    : "border-transparent text-customer-ui-text-secondary hover:text-customer-ui-text-primary hover:border-customer-ui-border"
-                }`}
+                    : "border-transparent text-customer-ui-text-secondary hover:text-customer-ui-text-primary hover:border-customer-ui-text-tertiary"
+                } flex items-center`}
               >
-                <span className="mr-2">{tab.icon}</span>
-                {tab.name}
+                {tab.icon}
+                <span className="ml-2">{tab.name}</span>
               </button>
             ))}
           </nav>
         </div>
-      </div>
 
-      {/* Tab Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Overview Tab */}
-        {activeTab === "overview" && (
-          <div className="space-y-8">
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {stats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="bg-customer-ui-surface rounded-2xl p-6 shadow-soft hover:shadow-medium transition-all duration-300"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`${stat.bgColor} p-3 rounded-xl`}>
-                      <div className={stat.color}>{stat.icon}</div>
-                    </div>
-                    <span className="text-sm font-medium text-green-500">
-                      {stat.change}
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-customer-ui-text-primary mb-2">
-                    {stat.value}
-                  </h3>
-                  <p className="text-customer-ui-text-secondary">
-                    {stat.title}
-                  </p>
-                </div>
-              ))}
-            </div>
+        {/* Tab Content */}
+        <div>
+          {/* Overview Tab */}
+          {activeTab === "overview" && (
+            <OverviewTab
+              dashboardSummary={dashboardSummary}
+              quickStats={quickStats}
+              recentActivity={recentActivity}
+              dashboardWidgets={dashboardWidgets}
+              isLoading={isLoading}
+              errors={errors}
+              onRefresh={() => {
+                fetchDashboardSummary();
+                fetchQuickStats();
+                fetchRecentActivity();
+                fetchDashboardWidgets();
+              }}
+              onTabChange={handleTabChange}
+              formatCurrency={formatCurrency}
+              formatDateTime={formatDateTime}
+              getStatusColor={getStatusColor}
+              getStatusIcon={getStatusIcon}
+            />
+          )}
 
-            {/* Quick Actions */}
-            <div className="bg-customer-ui-surface rounded-2xl p-6 shadow-soft">
-              <h2 className="text-xl font-bold text-customer-ui-text-primary mb-6">
-                Quick Actions
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <button
-                  onClick={() => setActiveTab("profile")}
-                  className="flex items-center p-4 rounded-lg border border-customer-ui-border hover:border-customer-brand-500 hover:bg-customer-brand-50 transition-all duration-200"
-                >
-                  <User className="w-6 h-6 text-customer-brand-500 mr-3" />
-                  <div className="text-left">
-                    <p className="font-medium text-customer-ui-text-primary">
-                      View Profile
-                    </p>
-                    <p className="text-sm text-customer-ui-text-secondary">
-                      Account details
-                    </p>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setActiveTab("network")}
-                  className="flex items-center p-4 rounded-lg border border-customer-ui-border hover:border-customer-brand-500 hover:bg-customer-brand-50 transition-all duration-200"
-                >
-                  <Network className="w-6 h-6 text-customer-brand-500 mr-3" />
-                  <div className="text-left">
-                    <p className="font-medium text-customer-ui-text-primary">
-                      Network Tree
-                    </p>
-                    <p className="text-sm text-customer-ui-text-secondary">
-                      View your team
-                    </p>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setActiveTab("earnings")}
-                  className="flex items-center p-4 rounded-lg border border-customer-ui-border hover:border-customer-brand-500 hover:bg-customer-brand-50 transition-all duration-200"
-                >
-                  <Wallet className="w-6 h-6 text-customer-brand-500 mr-3" />
-                  <div className="text-left">
-                    <p className="font-medium text-customer-ui-text-primary">
-                      Earnings
-                    </p>
-                    <p className="text-sm text-customer-ui-text-secondary">
-                      Income details
-                    </p>
-                  </div>
-                </button>
-                <button className="flex items-center p-4 rounded-lg border border-customer-ui-border hover:border-customer-brand-500 hover:bg-customer-brand-50 transition-all duration-200">
-                  <BarChart3 className="w-6 h-6 text-customer-brand-500 mr-3" />
-                  <div className="text-left">
-                    <p className="font-medium text-customer-ui-text-primary">
-                      Analytics
-                    </p>
-                    <p className="text-sm text-customer-ui-text-secondary">
-                      Performance metrics
-                    </p>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+          {/* Profile Tab */}
+          {activeTab === "profile" && (
+            <ProfileTab
+              userProfile={userProfile}
+              isLoading={isLoading}
+              errors={errors}
+              isEditingProfile={isEditingProfile}
+              setIsEditingProfile={setIsEditingProfile}
+              isChangingPassword={isChangingPassword}
+              setIsChangingPassword={setIsChangingPassword}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+              profileForm={profileForm}
+              setProfileForm={setProfileForm}
+              passwordForm={passwordForm}
+              setPasswordForm={setPasswordForm}
+              successMessage={successMessage}
+              onProfileUpdate={handleProfileUpdate}
+              onPasswordChange={handlePasswordChange}
+              onRefresh={() => fetchUserProfile()}
+              formatCurrency={formatCurrency}
+            />
+          )}
 
-        {/* Profile Tab */}
-        {activeTab === "profile" && (
-          <div className="space-y-8">
-            <div className="bg-customer-ui-surface rounded-2xl p-6 shadow-soft">
-              <h2 className="text-2xl font-bold text-customer-ui-text-primary mb-6">
-                Profile Information
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <User className="w-5 h-5 text-customer-ui-text-tertiary mr-3" />
-                    <div>
-                      <p className="text-sm text-customer-ui-text-secondary">
-                        Full Name
-                      </p>
-                      <p className="font-medium text-customer-ui-text-primary">
-                        {user?.name || "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Mail className="w-5 h-5 text-customer-ui-text-tertiary mr-3" />
-                    <div>
-                      <p className="text-sm text-customer-ui-text-secondary">
-                        Email
-                      </p>
-                      <p className="font-medium text-customer-ui-text-primary">
-                        {user?.email || "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Phone className="w-5 h-5 text-customer-ui-text-tertiary mr-3" />
-                    <div>
-                      <p className="text-sm text-customer-ui-text-secondary">
-                        Phone
-                      </p>
-                      <p className="font-medium text-customer-ui-text-primary">
-                        {user?.phone || "Not provided"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <Key className="w-5 h-5 text-customer-ui-text-tertiary mr-3" />
-                    <div>
-                      <p className="text-sm text-customer-ui-text-secondary">
-                        Referral Code
-                      </p>
-                      <p className="font-medium text-customer-ui-text-primary font-mono">
-                        {user?.referral_code || "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Crown className="w-5 h-5 text-customer-ui-text-tertiary mr-3" />
-                    <div>
-                      <p className="text-sm text-customer-ui-text-secondary">
-                        Role
-                      </p>
-                      <p className="font-medium text-customer-ui-text-primary">
-                        {user?.roles?.[0]?.name || "User"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="w-5 h-5 text-customer-ui-text-tertiary mr-3" />
-                    <div>
-                      <p className="text-sm text-customer-ui-text-secondary">
-                        Member Since
-                      </p>
-                      <p className="font-medium text-customer-ui-text-primary">
-                        {user?.created_at
-                          ? new Date(user.created_at).toLocaleDateString()
-                          : "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Network Tree Tab */}
+          {activeTab === "network" && (
+            <NetworkTab
+              networkStats={networkStats}
+              networkMembers={networkMembers}
+              pagination={pagination}
+              isLoading={isLoading}
+              errors={errors}
+              networkFilters={networkFilters}
+              onFilterChange={handleNetworkFilterChange}
+              onPageChange={handleNetworkPageChange}
+              onApplyFilters={applyNetworkFilters}
+              onClearFilters={clearNetworkFilters}
+              onRefresh={() => {
+                fetchNetworkTree();
+                fetchNetworkStats();
+                fetchNetworkMembers(networkFilters);
+              }}
+              formatDate={formatDate}
+              getStatusColor={getStatusColor}
+            />
+          )}
 
-            <div className="bg-customer-ui-surface rounded-2xl p-6 shadow-soft">
-              <h3 className="text-xl font-bold text-customer-ui-text-primary mb-4">
-                Account Status
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center">
-                  <ShieldCheck className="w-5 h-5 text-green-500 mr-3" />
-                  <div>
-                    <p className="text-sm text-customer-ui-text-secondary">
-                      Status
-                    </p>
-                    <p className="font-medium text-green-600 capitalize">
-                      {user?.status || "Active"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Mail className="w-5 h-5 text-customer-ui-text-tertiary mr-3" />
-                  <div>
-                    <p className="text-sm text-customer-ui-text-secondary">
-                      Email Verified
-                    </p>
-                    <p className="font-medium text-customer-ui-text-primary">
-                      {user?.email_verified_at ? "Yes" : "No"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Phone className="w-5 h-5 text-customer-ui-text-tertiary mr-3" />
-                  <div>
-                    <p className="text-sm text-customer-ui-text-secondary">
-                      Phone Verified
-                    </p>
-                    <p className="font-medium text-customer-ui-text-primary">
-                      {user?.phone_verified_at ? "Yes" : "No"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Network Tree Tab */}
-        {activeTab === "network" && (
-          <div className="bg-customer-ui-surface rounded-2xl p-6 shadow-soft">
-            <h2 className="text-2xl font-bold text-customer-ui-text-primary mb-6">
-              Network Tree
-            </h2>
-            <div className="text-center py-12">
-              <Network className="w-16 h-16 text-customer-ui-text-tertiary mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-customer-ui-text-primary mb-2">
-                Network Tree Coming Soon
-              </h3>
-              <p className="text-customer-ui-text-secondary">
-                Your network visualization will be available here once the API
-                is integrated.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Earnings Tab */}
-        {activeTab === "earnings" && (
-          <div className="space-y-8">
-            {/* Earnings Summary */}
-            <div className="bg-customer-ui-surface rounded-2xl p-6 shadow-soft">
-              <h2 className="text-2xl font-bold text-customer-ui-text-primary mb-6">
-                Earnings Summary
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-customer-brand-500">
-                    ${earningsData.totalEarnings.toLocaleString()}
-                  </p>
-                  <p className="text-customer-ui-text-secondary">
-                    Total Earnings
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-green-500">
-                    ${earningsData.thisMonth.toLocaleString()}
-                  </p>
-                  <p className="text-customer-ui-text-secondary">This Month</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-customer-ui-text-primary">
-                    ${earningsData.lastMonth.toLocaleString()}
-                  </p>
-                  <p className="text-customer-ui-text-secondary">Last Month</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Earnings by Type */}
-            <div className="bg-customer-ui-surface rounded-2xl p-6 shadow-soft">
-              <h3 className="text-xl font-bold text-customer-ui-text-primary mb-6">
-                Earnings by Type
-              </h3>
-              <div className="space-y-4">
-                {earningsTypes.map((earning, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 rounded-lg border border-customer-ui-border"
-                  >
-                    <div className="flex items-center">
-                      <div className={`${earning.bgColor} p-2 rounded-lg mr-4`}>
-                        <div className={earning.color}>{earning.icon}</div>
-                      </div>
-                      <div>
-                        <p className="font-medium text-customer-ui-text-primary">
-                          {earning.name}
-                        </p>
-                        <p className="text-sm text-customer-ui-text-secondary">
-                          {earning.description}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-customer-ui-text-primary">
-                        ${earning.amount.toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+          {/* Earnings Tab */}
+          {activeTab === "earnings" && (
+            <EarningsTab
+              earningsSummary={earningsSummary}
+              earningsByType={earningsByType}
+              earningsHistory={earningsHistory}
+              walletDetails={walletDetails}
+              pagination={pagination}
+              isLoading={isLoading}
+              errors={errors}
+              onRefresh={() => {
+                fetchEarningsSummary();
+                fetchEarningsByType();
+                fetchEarningsHistory();
+                fetchWalletDetails();
+              }}
+              formatCurrency={formatCurrency}
+              formatDateTime={formatDateTime}
+              getStatusColor={getStatusColor}
+              getStatusIcon={getStatusIcon}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
