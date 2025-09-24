@@ -13,7 +13,12 @@ export { default as AdminDashboard } from "./AdminDashboard";
 export { default as AdminDashboardPage } from "./features/dashboard/AdminDashboardPage";
 export { AdminUsersPage, AdminUserDetailsPage } from "./features/users";
 export { AdminPackagesPage } from "./features/packages";
-export { AdminInvestmentPlansPage } from "./features/investment-plans";
+export {
+  AdminInvestmentPlansPage,
+  AdminCreateInvestmentPlanPage,
+  AdminEditInvestmentPlanPage,
+  AdminInvestmentPlanDetailsPage,
+} from "./features/investment-plans";
 
 // Store
 export { useAdminAuthStore } from "./store/adminAuthStore";

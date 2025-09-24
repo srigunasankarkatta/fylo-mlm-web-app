@@ -68,12 +68,12 @@ const AdminLoginPage = () => {
     clearError();
 
     try {
-    await login(formData.email, formData.password);
-    setSuccessMessage("Login successful! Redirecting...");
-    // Redirect after a short delay to show success message
-    setTimeout(() => {
-      navigate("/admin");
-    }, 1000);
+      await login(formData.email, formData.password);
+      setSuccessMessage("Login successful! Redirecting...");
+      // Redirect after a short delay to show success message
+      setTimeout(() => {
+        navigate("/admin");
+      }, 1000);
     } catch (err) {
       // Error is handled by the store
       console.error("Login failed:", err);

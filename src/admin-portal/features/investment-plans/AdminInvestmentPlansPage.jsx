@@ -104,24 +104,6 @@ const AdminInvestmentPlansPage = () => {
     );
   };
 
-  const getRiskBadge = (riskLevel) => {
-    const riskColors = {
-      low: styles.riskLow,
-      medium: styles.riskMedium,
-      high: styles.riskHigh,
-    };
-
-    return (
-      <span
-        className={`${styles.riskBadge} ${
-          riskColors[riskLevel] || styles.riskMedium
-        }`}
-      >
-        {riskLevel?.charAt(0).toUpperCase() + riskLevel?.slice(1) || "Medium"}
-      </span>
-    );
-  };
-
   const handleToggleStatus = async (planId, currentStatus) => {
     try {
       const response = await adminApi.patch(
@@ -192,8 +174,8 @@ const AdminInvestmentPlansPage = () => {
       render: (value) => (value ? formatAmount(value) : "Unlimited"),
     },
     {
-      key: "return_rate",
-      title: "Return Rate",
+      key: "daily_profit_percent",
+      title: "Daily Profit",
       width: "100px",
       render: (value) => formatPercentage(value),
     },
@@ -204,10 +186,10 @@ const AdminInvestmentPlansPage = () => {
       render: (value) => `${value} days`,
     },
     {
-      key: "risk_level",
-      title: "Risk",
+      key: "referral_percent",
+      title: "Referral %",
       width: "100px",
-      render: (value) => getRiskBadge(value),
+      render: (value) => formatPercentage(value),
     },
     {
       key: "is_active",

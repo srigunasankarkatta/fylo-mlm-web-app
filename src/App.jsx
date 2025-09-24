@@ -22,6 +22,9 @@ import {
   AdminUserDetailsPage,
   AdminPackagesPage,
   AdminInvestmentPlansPage,
+  AdminCreateInvestmentPlanPage,
+  AdminEditInvestmentPlanPage,
+  AdminInvestmentPlanDetailsPage,
 } from "./admin-portal";
 import "./index.css";
 
@@ -141,6 +144,36 @@ function App() {
             <AdminProtectedRoute>
               <AdminLayout>
                 <AdminInvestmentPlansPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/investment-plans/create"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminCreateInvestmentPlanPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/investment-plans/:id/edit"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminEditInvestmentPlanPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/investment-plans/:id"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminInvestmentPlanDetailsPage />
               </AdminLayout>
             </AdminProtectedRoute>
           }

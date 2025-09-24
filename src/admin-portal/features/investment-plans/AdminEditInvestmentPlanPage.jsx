@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { adminApi } from "../../apiClient";
-import styles from "./AdminCreateInvestmentPlanPage.module.scss";
+import styles from "./AdminEditInvestmentPlanPage.module.scss";
 
-const AdminCreateInvestmentPlanPage = () => {
+const AdminEditInvestmentPlanPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -21,6 +23,40 @@ const AdminCreateInvestmentPlanPage = () => {
   });
 
   const [validationErrors, setValidationErrors] = useState({});
+
+  // Fetch plan data on component mount
+  useEffect(() => {
+    const fetchPlan = async () => {
+      try {
+        const response = await adminApi.get(`/admin/investment-plans/${id}`);
+        if (response.data.status === "success") {
+          const plan = response.data.data;
+          setFormData({
+            name: plan.name || "",
+            description: plan.description || "",
+            min_amount: plan.min_amount || "",
+            max_amount: plan.max_amount || "",
+            daily_profit_percent: plan.daily_profit_percent || "",
+            duration_days: plan.duration_days || "",
+            referral_percent: plan.referral_percent || "",
+            is_active: plan.is_active !== undefined ? plan.is_active : true,
+          });
+        } else {
+          setError("Failed to fetch investment plan");
+        }
+      } catch (err) {
+        setError(
+          err.response?.data?.message || "Failed to fetch investment plan"
+        );
+      } finally {
+        setInitialLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchPlan();
+    }
+  }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -108,7 +144,7 @@ const AdminCreateInvestmentPlanPage = () => {
     setSuccessMessage("");
 
     try {
-      const response = await adminApi.post("/admin/investment-plans", {
+      const response = await adminApi.put(`/admin/investment-plans/${id}`, {
         name: formData.name.trim(),
         description: formData.description.trim(),
         min_amount: parseFloat(formData.min_amount),
@@ -122,12 +158,12 @@ const AdminCreateInvestmentPlanPage = () => {
       });
 
       if (response.data.status === "success") {
-        setSuccessMessage("Investment plan created successfully!");
+        setSuccessMessage("Investment plan updated successfully!");
         setTimeout(() => {
           navigate("/admin/investment-plans");
         }, 1500);
       } else {
-        setError("Failed to create investment plan");
+        setError("Failed to update investment plan");
       }
     } catch (err) {
       // Handle server-side validation errors
@@ -146,7 +182,7 @@ const AdminCreateInvestmentPlanPage = () => {
         setError("Please fix the validation errors below");
       } else {
         setError(
-          err.response?.data?.message || "Failed to create investment plan"
+          err.response?.data?.message || "Failed to update investment plan"
         );
       }
     } finally {
@@ -158,12 +194,32 @@ const AdminCreateInvestmentPlanPage = () => {
     navigate("/admin/investment-plans");
   };
 
+  if (initialLoading) {
+    return (
+      <div className={styles.editPlanPage}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </div>
+          <p>Loading investment plan...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={styles.createPlanPage}>
+    <div className={styles.editPlanPage}>
       {/* Page Header */}
       <div className={styles.pageHeader}>
         <div className={styles.headerTop}>
-          <h1 className={styles.pageTitle}>Create Investment Plan</h1>
+          <h1 className={styles.pageTitle}>Edit Investment Plan</h1>
           <button className={styles.cancelButton} onClick={handleCancel}>
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -177,13 +233,13 @@ const AdminCreateInvestmentPlanPage = () => {
           </button>
         </div>
         <p className={styles.pageDescription}>
-          Create a new investment plan for users to invest in
+          Update the investment plan details
         </p>
       </div>
 
       {/* Form Section */}
       <div className={styles.formSection}>
-        <form onSubmit={handleSubmit} className={styles.createForm}>
+        <form onSubmit={handleSubmit} className={styles.editForm}>
           {/* Success Message */}
           {successMessage && (
             <div className={styles.successMessage}>
@@ -468,7 +524,7 @@ const AdminCreateInvestmentPlanPage = () => {
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                   </svg>
-                  Creating...
+                  Updating...
                 </>
               ) : (
                 <>
@@ -477,10 +533,10 @@ const AdminCreateInvestmentPlanPage = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M12 4v16m8-8H4"
+                      d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  Create Plan
+                  Update Plan
                 </>
               )}
             </button>
@@ -491,4 +547,4 @@ const AdminCreateInvestmentPlanPage = () => {
   );
 };
 
-export default AdminCreateInvestmentPlanPage;
+export default AdminEditInvestmentPlanPage;
