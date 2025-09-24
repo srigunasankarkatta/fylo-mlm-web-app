@@ -1,0 +1,95 @@
+@import "../../../app/color-variables.css";
+
+.dashboardPage {
+  padding: 0;
+}
+
+.pageHeader {
+  margin-bottom: 2rem;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-neutral-900);
+  margin: 0 0 0.5rem 0;
+}
+
+.pageDescription {
+  font-size: 1rem;
+  color: var(--color-neutral-600);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.emptyContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.emptyState {
+  text-align: center;
+  max-width: 400px;
+  padding: 3rem 2rem;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 2rem;
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 16px rgba(14, 165, 233, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-neutral-900);
+  margin: 0 0 1rem 0;
+}
+
+.emptyDescription {
+  font-size: 1rem;
+  color: var(--color-neutral-600);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pageContent {
+    padding: 1rem;
+  }
+
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+
+  .emptyIcon {
+    width: 60px;
+    height: 60px;
+
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .emptyTitle {
+    font-size: 1.25rem;
+  }
+}

@@ -1,0 +1,427 @@
+@import "../../../app/color-variables.css";
+
+.tableContainer {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 100%;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch; // Smooth scrolling on mobile
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-primary-500);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--color-primary-600);
+    }
+  }
+}
+
+.adminTable {
+  width: 100%;
+  min-width: 1200px; // Force horizontal scroll for smaller screens
+  border-collapse: separate; // Allow sticky positioning to work properly
+  border-spacing: 0;
+  table-layout: fixed; // Prevent column width changes
+
+  th,
+  td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap; // Prevent text wrapping
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  th {
+    background: rgba(248, 250, 252, 0.8);
+    font-weight: 600;
+    color: var(--color-neutral-700);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  td {
+    color: var(--color-neutral-900);
+    font-size: 0.875rem;
+  }
+
+  tbody tr {
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(14, 165, 233, 0.02);
+    }
+  }
+}
+
+.tableHeader {
+  &.alignCenter {
+    text-align: center;
+  }
+
+  &.alignRight {
+    text-align: right;
+  }
+}
+
+.tableRow {
+  &.clickableRow {
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(14, 165, 233, 0.05);
+    }
+  }
+}
+
+.tableCell {
+  &.alignCenter {
+    text-align: center;
+  }
+
+  &.alignRight {
+    text-align: right;
+  }
+}
+
+// Sticky Actions Column
+.stickyActionsHeader {
+  position: sticky;
+  right: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(248, 250, 252, 0.98) 0%,
+    rgba(241, 245, 249, 0.98) 100%
+  );
+  backdrop-filter: blur(10px);
+  z-index: 30;
+  border-left: 2px solid rgba(14, 165, 233, 0.3);
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.15);
+  min-width: 120px;
+  width: 120px;
+}
+
+.stickyActionsCell {
+  position: sticky;
+  right: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 250, 252, 0.98) 100%
+  );
+  backdrop-filter: blur(10px);
+  z-index: 20;
+  border-left: 2px solid rgba(14, 165, 233, 0.3);
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.15);
+  min-width: 120px;
+  width: 120px;
+  white-space: normal; // Allow normal wrapping for actions
+
+  // Ensure action buttons are properly styled
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
+
+.cellValue {
+  color: var(--color-neutral-900);
+}
+
+.nullValue {
+  color: var(--color-neutral-400);
+  font-style: italic;
+}
+
+.booleanValue {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.booleanTrue {
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+}
+
+.booleanFalse {
+  background: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+}
+
+.objectValue {
+  font-family: monospace;
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--color-neutral-600);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.loadingState,
+.errorState,
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(14, 165, 233, 0.1);
+  border-top: 4px solid var(--color-primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.errorIcon,
+.emptyIcon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-neutral-400);
+  margin-bottom: 1rem;
+}
+
+.errorIcon {
+  color: var(--color-error-500);
+}
+
+.retryButton {
+  padding: 8px 16px;
+  background: var(--color-primary-500);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--color-primary-600);
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(248, 250, 252, 0.5);
+}
+
+.paginationInfo {
+  color: var(--color-neutral-600);
+  font-size: 0.875rem;
+}
+
+.paginationControls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.paginationButton {
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--color-neutral-700);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-50);
+    border-color: var(--color-primary-200);
+    color: var(--color-primary-600);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.paginationButtonActive {
+  background: var(--color-primary-500);
+  color: white;
+  border-color: var(--color-primary-500);
+
+  &:hover {
+    background: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+  }
+}
+
+// React Paginate Styles
+.reactPaginate {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.25rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.pageItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pageLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--color-neutral-700);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-width: 40px;
+  height: 40px;
+
+  &:hover {
+    background: var(--color-primary-50);
+    border-color: var(--color-primary-200);
+    color: var(--color-primary-600);
+  }
+}
+
+.active {
+  .pageLink {
+    background: var(--color-primary-500);
+    color: white;
+    border-color: var(--color-primary-500);
+
+    &:hover {
+      background: var(--color-primary-600);
+      border-color: var(--color-primary-600);
+    }
+  }
+}
+
+.disabled {
+  .pageLink {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .pagination {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .paginationControls {
+    justify-content: center;
+  }
+
+  .reactPaginate {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .adminTable {
+    font-size: 0.75rem;
+
+    th,
+    td {
+      padding: 0.5rem;
+    }
+  }
+
+  .paginationControls {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .paginationButton {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  .reactPaginate {
+    gap: 0.125rem;
+  }
+
+  .pageLink {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+    min-width: 32px;
+    height: 32px;
+  }
+
+  // Mobile sticky actions adjustments
+  .stickyActionsCell {
+    min-width: 100px;
+
+    .actions {
+      gap: 0.25rem;
+    }
+  }
+}

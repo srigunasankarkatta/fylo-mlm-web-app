@@ -13,6 +13,16 @@ import {
   ProtectedRoute,
 } from "./customer-portal";
 import PackageManagementPage from "./customer-portal/features/packages/PackageManagementPage";
+import {
+  AdminLoginPage,
+  AdminProtectedRoute,
+  AdminLayout,
+  AdminDashboard,
+  AdminUsersPage,
+  AdminUserDetailsPage,
+  AdminPackagesPage,
+  AdminInvestmentPlansPage,
+} from "./admin-portal";
 import "./index.css";
 
 function App() {
@@ -80,6 +90,59 @@ function App() {
                 <DashboardPage />
               </CustomerLayout>
             </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Portal Routes */}
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminDashboard />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminUsersPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users/:id"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminUserDetailsPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/packages"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminPackagesPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/investment-plans"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminInvestmentPlansPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
           }
         />
 

@@ -168,6 +168,47 @@
   --color-customer-ui-text-secondary: var(--color-neutral-600);
   --color-customer-ui-text-tertiary: var(--color-neutral-500);
   --color-customer-ui-text-inverse: #ffffff;
+
+  /* Admin Portal Colors - Dark Professional Theme */
+  --color-admin-brand-50: #f8fafc;
+  --color-admin-brand-100: #f1f5f9;
+  --color-admin-brand-200: #e2e8f0;
+  --color-admin-brand-300: #cbd5e1;
+  --color-admin-brand-400: #94a3b8;
+  --color-admin-brand-500: #64748b;
+  --color-admin-brand-600: #475569;
+  --color-admin-brand-700: #334155;
+  --color-admin-brand-800: #1e293b;
+  --color-admin-brand-900: #0f172a;
+  --color-admin-brand-950: #020617;
+
+  --color-admin-accent-50: #f0f9ff;
+  --color-admin-accent-100: #e0f2fe;
+  --color-admin-accent-200: #bae6fd;
+  --color-admin-accent-300: #7dd3fc;
+  --color-admin-accent-400: #38bdf8;
+  --color-admin-accent-500: #0ea5e9;
+  --color-admin-accent-600: #0284c7;
+  --color-admin-accent-700: #0369a1;
+  --color-admin-accent-800: #075985;
+  --color-admin-accent-900: #0c4a6e;
+  --color-admin-accent-950: #082f49;
+
+  --color-admin-status-active: var(--color-success-500);
+  --color-admin-status-pending: var(--color-warning-500);
+  --color-admin-status-inactive: var(--color-neutral-400);
+  --color-admin-status-suspended: var(--color-error-500);
+  --color-admin-status-verified: var(--color-info-500);
+
+  --color-admin-ui-background: var(--color-neutral-50);
+  --color-admin-ui-surface: #ffffff;
+  --color-admin-ui-surface-elevated: #ffffff;
+  --color-admin-ui-border: var(--color-neutral-200);
+  --color-admin-ui-border-hover: var(--color-neutral-300);
+  --color-admin-ui-text-primary: var(--color-neutral-900);
+  --color-admin-ui-text-secondary: var(--color-neutral-600);
+  --color-admin-ui-text-tertiary: var(--color-neutral-500);
+  --color-admin-ui-text-inverse: #ffffff;
 }
 
 /* Authority Portal Theme */
@@ -208,4 +249,24 @@
   --color-ui-text-secondary: var(--color-customer-ui-text-secondary);
   --color-ui-text-tertiary: var(--color-customer-ui-text-tertiary);
   --color-ui-text-inverse: var(--color-customer-ui-text-inverse);
+}
+
+/* Admin Portal Theme */
+[data-theme="admin"] {
+  --color-brand-primary: var(--color-admin-brand-500);
+  --color-brand-secondary: var(--color-admin-accent-500);
+  --color-status-active: var(--color-admin-status-active);
+  --color-status-pending: var(--color-admin-status-pending);
+  --color-status-inactive: var(--color-admin-status-inactive);
+  --color-status-suspended: var(--color-admin-status-suspended);
+  --color-status-verified: var(--color-admin-status-verified);
+  --color-ui-background: var(--color-admin-ui-background);
+  --color-ui-surface: var(--color-admin-ui-surface);
+  --color-ui-surface-elevated: var(--color-admin-ui-surface-elevated);
+  --color-ui-border: var(--color-admin-ui-border);
+  --color-ui-border-hover: var(--color-admin-ui-border-hover);
+  --color-ui-text-primary: var(--color-admin-ui-text-primary);
+  --color-ui-text-secondary: var(--color-admin-ui-text-secondary);
+  --color-ui-text-tertiary: var(--color-admin-ui-text-tertiary);
+  --color-ui-text-inverse: var(--color-admin-ui-text-inverse);
 }
