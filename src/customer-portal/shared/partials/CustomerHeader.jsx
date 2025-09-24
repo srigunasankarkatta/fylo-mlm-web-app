@@ -48,6 +48,14 @@ const Header = () => {
             >
               Packages
             </Link>
+            {isAuthenticated && (
+              <Link
+                to="/investment-plans"
+                className="text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
+              >
+                Investment Plans
+              </Link>
+            )}
             <Link
               to="/faq"
               className="text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
@@ -140,6 +148,15 @@ const Header = () => {
               >
                 Packages
               </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/investment-plans"
+                  className="block px-3 py-2 text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Investment Plans
+                </Link>
+              )}
               <Link
                 to="/faq"
                 className="block px-3 py-2 text-customer-ui-text-secondary hover:text-customer-brand-500 transition-colors duration-200 font-medium"

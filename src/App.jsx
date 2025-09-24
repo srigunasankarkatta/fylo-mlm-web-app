@@ -5,6 +5,7 @@ import {
   HomePage,
   FeaturesPage,
   PackagesPage,
+  CustomerInvestmentPlansPage,
   FAQPage,
   ContactPage,
   LoginPage,
@@ -55,6 +56,16 @@ function App() {
             <CustomerLayout>
               <PackagesPage />
             </CustomerLayout>
+          }
+        />
+        <Route
+          path="/investment-plans"
+          element={
+            <ProtectedRoute>
+              <CustomerLayout>
+                <CustomerInvestmentPlansPage />
+              </CustomerLayout>
+            </ProtectedRoute>
           }
         />
         <Route
