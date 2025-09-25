@@ -104,12 +104,15 @@ const CustomerInvestmentPlansPage = () => {
           navigate("/dashboard");
         }, 2000);
       } else {
-        setPurchaseError(result.error || "Failed to create investment");
+        const errorMessage = result.error || "Failed to create investment";
+        setPurchaseError(errorMessage);
+        alert(`Investment Purchase Failed: ${errorMessage}`);
       }
     } catch (err) {
-      setPurchaseError(
-        err.response?.data?.message || "Failed to create investment"
-      );
+      const errorMessage =
+        err.response?.data?.message || "Failed to create investment";
+      setPurchaseError(errorMessage);
+      alert(`Investment Purchase Failed: ${errorMessage}`);
     } finally {
       setPurchaseLoading(false);
     }

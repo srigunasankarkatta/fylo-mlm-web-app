@@ -1,8 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../../../app/store";
 import { useDashboardStore } from "../../store/dashboardStore";
-import { OverviewTab, ProfileTab, NetworkTab, EarningsTab } from "./components";
-import { Activity, User, Network, Wallet, AlertCircle } from "lucide-react";
+import {
+  OverviewTab,
+  ProfileTab,
+  NetworkTab,
+  EarningsTab,
+  InvestmentPlansTab,
+} from "./components";
+import {
+  Activity,
+  User,
+  Network,
+  Wallet,
+  AlertCircle,
+  TrendingUp,
+} from "lucide-react";
 
 const DashboardPage = () => {
   const {
@@ -343,6 +356,11 @@ const DashboardPage = () => {
       icon: <Network className="w-5 h-5" />,
     },
     { id: "earnings", name: "Earnings", icon: <Wallet className="w-5 h-5" /> },
+    {
+      id: "investment-plans",
+      name: "Investment Plans",
+      icon: <TrendingUp className="w-5 h-5" />,
+    },
   ];
 
   return (
@@ -476,6 +494,17 @@ const DashboardPage = () => {
                 fetchWalletDetails();
               }}
               formatCurrency={formatCurrency}
+              formatDateTime={formatDateTime}
+              getStatusColor={getStatusColor}
+              getStatusIcon={getStatusIcon}
+            />
+          )}
+
+          {/* Investment Plans Tab */}
+          {activeTab === "investment-plans" && (
+            <InvestmentPlansTab
+              formatCurrency={formatCurrency}
+              formatDate={formatDate}
               formatDateTime={formatDateTime}
               getStatusColor={getStatusColor}
               getStatusIcon={getStatusIcon}
