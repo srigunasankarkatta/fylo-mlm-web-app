@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { api } from "./apiClient";
 
 // Auth store
 export const useAuthStore = create(
@@ -15,76 +16,72 @@ export const useAuthStore = create(
       login: async (credentials) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await fetch("http://localhost:8000/api/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(credentials),
-          });
+          const response = await api.post("/login", credentials);
+          const data = response.data;
 
-          const data = await response.json();
+          if (data.status === "success") {
+            set({
+              user: data.data.user,
+              accessToken: data.data.access_token,
+              refreshToken: data.data.refresh_token,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
 
-          if (!response.ok) {
+            return { success: true, data: data.data };
+          } else {
             throw new Error(data.message || "Login failed");
           }
-
-          set({
-            user: data.data.user,
-            accessToken: data.data.access_token,
-            refreshToken: data.data.refresh_token,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          });
-
-          return { success: true, data: data.data };
         } catch (error) {
+          const errorMessage =
+            error.response?.data?.message || error.message || "Login failed";
           set({
             user: null,
             accessToken: null,
             refreshToken: null,
             isAuthenticated: false,
             isLoading: false,
-            error: error.message,
+            error: errorMessage,
           });
-          return { success: false, error: error.message };
+          return { success: false, error: errorMessage };
         }
       },
 
       register: async (userData) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await fetch("http://localhost:8000/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userData),
-          });
+          const response = await api.post("/register", userData);
+          const data = response.data;
 
-          const data = await response.json();
+          if (data.status === "success") {
+            set({
+              user: data.data.user,
+              accessToken: data.data.access_token,
+              refreshToken: data.data.refresh_token,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
 
-          if (!response.ok) {
+            return { success: true, data: data.data };
+          } else {
             throw new Error(data.message || "Registration failed");
           }
-
-          set({
-            user: data.data.user,
-            accessToken: data.data.access_token,
-            refreshToken: data.data.refresh_token,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          });
-
-          return { success: true, data: data.data };
         } catch (error) {
+          const errorMessage =
+            error.response?.data?.message ||
+            error.message ||
+            "Registration failed";
           set({
             user: null,
             accessToken: null,
             refreshToken: null,
             isAuthenticated: false,
             isLoading: false,
-            error: error.message,
+            error: errorMessage,
           });
-          return { success: false, error: error.message };
+          return { success: false, error: errorMessage };
         }
       },
 
@@ -94,13 +91,7 @@ export const useAuthStore = create(
         try {
           // Call logout API if token exists
           if (accessToken) {
-            await fetch("http://localhost:8000/api/logout", {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json",
-              },
-            });
+            await api.post("/logout");
           }
         } catch (error) {
           console.error("Logout API call failed:", error);
@@ -128,27 +119,29 @@ export const useAuthStore = create(
         }
 
         try {
-          const response = await fetch("http://localhost:8000/api/refresh", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${refreshToken}`,
-              "Content-Type": "application/json",
-            },
-          });
+          const response = await api.post(
+            "/refresh",
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${refreshToken}`,
+              },
+            }
+          );
 
-          const data = await response.json();
+          const data = response.data;
 
-          if (!response.ok) {
+          if (data.status === "success") {
+            set({
+              accessToken: data.data.access_token,
+              refreshToken: data.data.refresh_token,
+              error: null,
+            });
+
+            return { success: true, data: data.data };
+          } else {
             throw new Error(data.message || "Token refresh failed");
           }
-
-          set({
-            accessToken: data.data.access_token,
-            refreshToken: data.data.refresh_token,
-            error: null,
-          });
-
-          return { success: true, data: data.data };
         } catch (error) {
           // If refresh fails, logout user
           get().logout();
@@ -164,28 +157,25 @@ export const useAuthStore = create(
         }
 
         try {
-          const response = await fetch("http://localhost:8000/api/me", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          });
+          const response = await api.get("/me");
+          const data = response.data;
 
-          const data = await response.json();
+          if (data.status === "success") {
+            set({
+              user: data.data,
+              error: null,
+            });
 
-          if (!response.ok) {
+            return { success: true, data: data.data };
+          } else {
             throw new Error(data.message || "Failed to get profile");
           }
-
-          set({
-            user: data.data,
-            error: null,
-          });
-
-          return { success: true, data: data.data };
         } catch (error) {
-          set({ error: error.message });
+          const errorMessage =
+            error.response?.data?.message ||
+            error.message ||
+            "Failed to get profile";
+          set({ error: errorMessage });
           throw error;
         }
       },
