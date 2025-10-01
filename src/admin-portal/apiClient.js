@@ -32,8 +32,8 @@ adminApiClient.interceptors.response.use(
   (error) => {
     // Handle 401 Unauthorized
     if (error.response?.status === 401) {
-      // Clear token and redirect to login
-      localStorage.removeItem("admin_token");
+      // Clear all localStorage and redirect to login
+      localStorage.clear();
       window.location.href = "/admin/login";
     }
 

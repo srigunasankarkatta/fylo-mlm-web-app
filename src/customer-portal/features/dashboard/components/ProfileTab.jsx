@@ -35,6 +35,17 @@ const ProfileTab = ({
   onRefresh,
   formatCurrency,
 }) => {
+  // Debug logging
+  console.log("ProfileTab Debug Info:");
+  console.log("- userProfile:", userProfile);
+  console.log("- userProfile?.user:", userProfile?.user);
+  console.log(
+    "- userProfile?.user?.referral_code:",
+    userProfile?.user?.referral_code
+  );
+  console.log("- isLoading:", isLoading);
+  console.log("- errors:", errors);
+
   return (
     <div className="bg-customer-ui-surface rounded-xl shadow-soft p-6 space-y-6">
       <div className="flex items-center justify-between">

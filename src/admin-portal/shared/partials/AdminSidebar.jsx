@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import styles from "./AdminSidebar.module.scss";
+import { useAdminAuthStore } from "../../store/adminAuthStore";
 
 const AdminSidebar = ({ onLogout, user }) => {
   console.log("AdminSidebar props:", {
@@ -342,7 +343,9 @@ const AdminSidebar = ({ onLogout, user }) => {
         <button
           className={styles.logoutButton}
           onClick={() => {
-            localStorage.removeItem("admin_token");
+            // Use the proper logout function from the store
+            const { logout } = useAdminAuthStore.getState();
+            logout();
             window.location.href = "/admin/login";
           }}
         >

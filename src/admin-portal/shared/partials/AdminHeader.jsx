@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import styles from "./AdminHeader.module.scss";
+import { useAdminAuthStore } from "../../store/adminAuthStore";
 
 const AdminHeader = ({ onLogout, user }) => {
   console.log("AdminHeader props:", {
@@ -136,7 +137,9 @@ const AdminHeader = ({ onLogout, user }) => {
                 <button
                   className={styles.dropdownItem}
                   onClick={() => {
-                    localStorage.removeItem("admin_token");
+                    // Use the proper logout function from the store
+                    const { logout } = useAdminAuthStore.getState();
+                    logout();
                     window.location.href = "/admin/login";
                   }}
                 >

@@ -98,6 +98,7 @@ const DashboardPage = () => {
           console.log("Fetching dashboard data...");
           await Promise.all([
             fetchDashboardSummary(),
+            fetchUserProfile(), // Add profile fetch to initial load
             fetchQuickStats(),
             fetchRecentActivity(),
             fetchDashboardWidgets(),
@@ -116,6 +117,7 @@ const DashboardPage = () => {
     user,
     isAuthenticated,
     fetchDashboardSummary,
+    fetchUserProfile,
     fetchQuickStats,
     fetchRecentActivity,
     fetchDashboardWidgets,
@@ -151,14 +153,19 @@ const DashboardPage = () => {
 
   // Handle tab changes and fetch data accordingly
   const handleTabChange = async (tabId) => {
+    console.log("Tab changed to:", tabId);
     setActiveTab(tabId);
     setSuccessMessage(""); // Clear any success messages
 
     // Fetch data based on the selected tab
     switch (tabId) {
       case "profile":
+        console.log("Profile tab selected, userProfile exists:", !!userProfile);
         if (!userProfile) {
+          console.log("Fetching user profile...");
           await fetchUserProfile();
+        } else {
+          console.log("User profile already loaded:", userProfile);
         }
         break;
       case "network":

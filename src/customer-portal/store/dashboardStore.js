@@ -233,7 +233,13 @@ export const useDashboardStore = create(
         }));
 
         try {
+          console.log("Fetching user profile from API: /user/profile");
           const response = await api.get("/user/profile");
+
+          console.log("API Response:", response);
+          console.log("Response data:", response.data);
+          console.log("Response status:", response.data.status);
+          console.log("Response data.data:", response.data.data);
 
           if (response.data.status === "success") {
             set({
@@ -241,8 +247,10 @@ export const useDashboardStore = create(
               isLoading: { ...get().isLoading, profile: false },
               errors: { ...get().errors, profile: null },
             });
+            console.log("userProfile stored in state:", response.data.data);
             return { success: true, data: response.data.data };
           } else {
+            console.error("API returned error status:", response.data);
             throw new Error(
               response.data.message || "Failed to fetch user profile"
             );

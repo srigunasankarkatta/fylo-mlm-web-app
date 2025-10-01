@@ -63,9 +63,9 @@ const useAdminAuthStore = create(
       logout: () => {
         console.log("Logout function called");
 
-        // Clear token from localStorage
-        localStorage.removeItem("admin_token");
-        console.log("Admin token cleared from localStorage");
+        // Clear all localStorage items
+        localStorage.clear();
+        console.log("All localStorage items cleared");
 
         // Clear auth state
         set({

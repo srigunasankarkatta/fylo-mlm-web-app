@@ -105,6 +105,9 @@ export const useAuthStore = create(
         } catch (error) {
           console.error("Logout API call failed:", error);
         } finally {
+          // Clear all localStorage items
+          localStorage.clear();
+
           // Clear local state regardless of API call result
           set({
             user: null,
