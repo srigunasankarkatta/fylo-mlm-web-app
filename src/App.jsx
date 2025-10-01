@@ -26,6 +26,10 @@ import {
   AdminCreateInvestmentPlanPage,
   AdminEditInvestmentPlanPage,
   AdminInvestmentPlanDetailsPage,
+  AdminTransactionsPage,
+  AdminTransactionDetailsPage,
+  AdminInvestmentTransactionsPage,
+  AdminInvestmentTransactionDetailsPage,
 } from "./admin-portal";
 import "./index.css";
 
@@ -113,9 +117,15 @@ function App() {
           path="/admin"
           element={
             <AdminProtectedRoute>
-             
-                <AdminDashboard />
-             
+              <AdminDashboard />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminProtectedRoute>
+              <AdminDashboard />
             </AdminProtectedRoute>
           }
         />
@@ -185,6 +195,46 @@ function App() {
             <AdminProtectedRoute>
               <AdminLayout>
                 <AdminInvestmentPlanDetailsPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/transactions"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminTransactionsPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/transactions/:id"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminTransactionDetailsPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/investment-transactions"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminInvestmentTransactionsPage />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/investment-transactions/:id"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminInvestmentTransactionDetailsPage />
               </AdminLayout>
             </AdminProtectedRoute>
           }

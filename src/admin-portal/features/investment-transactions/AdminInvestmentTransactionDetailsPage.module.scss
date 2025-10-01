@@ -1,0 +1,352 @@
+@import "../../../app/color-variables.css";
+
+.transactionDetailsPage {
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.loadingContainer,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--color-primary-200);
+  border-top: 4px solid var(--color-primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.errorIcon {
+  width: 64px;
+  height: 64px;
+  color: #ef4444;
+  margin-bottom: 1rem;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.retryButton,
+.backButton {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  margin-top: 1rem;
+
+  &:hover {
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+  }
+}
+
+.pageHeader {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  color: var(--color-neutral-700);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  margin: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: var(--color-primary-200);
+    color: var(--color-primary-600);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-neutral-900);
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pageDescription {
+  font-size: 1rem;
+  color: var(--color-neutral-600);
+  margin: 0;
+}
+
+.overviewSection {
+  margin-bottom: 2rem;
+}
+
+.overviewCard {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.transactionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.transactionIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.transactionInfo {
+  flex: 1;
+}
+
+.transactionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-neutral-900);
+  margin: 0 0 0.5rem 0;
+  text-transform: capitalize;
+}
+
+.transactionDescription {
+  font-size: 1rem;
+  color: var(--color-neutral-600);
+  margin: 0;
+}
+
+.transactionStatus {
+  display: flex;
+  align-items: center;
+}
+
+.amountSection {
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.amountLabel {
+  font-size: 0.875rem;
+  color: var(--color-neutral-500);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.amount {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.amountPositive {
+  color: #10b981;
+}
+
+.detailsSection {
+  margin-bottom: 2rem;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.detailCard {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-neutral-900);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detailList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detailItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.detailLabel {
+  font-size: 0.875rem;
+  color: var(--color-neutral-600);
+  font-weight: 500;
+}
+
+.detailValue {
+  font-size: 0.875rem;
+  color: var(--color-neutral-900);
+  font-weight: 600;
+  text-align: right;
+}
+
+.statusBadge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.statusActive {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.statusCompleted {
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+}
+
+.statusPending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+
+.statusCancelled {
+  background: rgba(107, 114, 128, 0.1);
+  color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .transactionDetailsPage {
+    padding: 1rem;
+  }
+
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .headerLeft {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .transactionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .transactionIcon {
+    width: 48px;
+    height: 48px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .amount {
+    font-size: 2rem;
+  }
+}

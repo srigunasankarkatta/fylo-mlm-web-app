@@ -19,6 +19,14 @@ export {
   AdminEditInvestmentPlanPage,
   AdminInvestmentPlanDetailsPage,
 } from "./features/investment-plans";
+export {
+  AdminTransactionsPage,
+  AdminTransactionDetailsPage,
+} from "./features/transactions";
+export {
+  AdminInvestmentTransactionsPage,
+  AdminInvestmentTransactionDetailsPage,
+} from "./features/investment-transactions";
 
 // Store
 export { useAdminAuthStore } from "./store/adminAuthStore";

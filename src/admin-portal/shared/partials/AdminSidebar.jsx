@@ -50,15 +50,7 @@ const AdminSidebar = ({ onLogout, user }) => {
           />
         </svg>
       ),
-      children: [
-        { id: "all-users", label: "All Users", href: "/admin/users" },
-        { id: "user-roles", label: "User Roles", href: "/admin/users/roles" },
-        {
-          id: "permissions",
-          label: "Permissions",
-          href: "/admin/users/permissions",
-        },
-      ],
+      children: [{ id: "all-users", label: "All Users", href: "/admin/users" }],
     },
     {
       id: "packages",
@@ -75,16 +67,6 @@ const AdminSidebar = ({ onLogout, user }) => {
       ),
       children: [
         { id: "all-packages", label: "All Packages", href: "/admin/packages" },
-        {
-          id: "create-package",
-          label: "Create Package",
-          href: "/admin/packages/create",
-        },
-        {
-          id: "package-categories",
-          label: "Categories",
-          href: "/admin/packages/categories",
-        },
       ],
     },
     {
@@ -105,11 +87,6 @@ const AdminSidebar = ({ onLogout, user }) => {
           id: "all-investment-plans",
           label: "All Plans",
           href: "/admin/investment-plans",
-        },
-        {
-          id: "active-plans",
-          label: "Active Plans",
-          href: "/admin/investment-plans/active",
         },
         {
           id: "create-plan",
@@ -138,102 +115,10 @@ const AdminSidebar = ({ onLogout, user }) => {
           href: "/admin/transactions",
         },
         {
-          id: "pending-transactions",
-          label: "Pending",
-          href: "/admin/transactions/pending",
+          id: "investment-transactions",
+          label: "Investment Transactions",
+          href: "/admin/investment-transactions",
         },
-        {
-          id: "transaction-reports",
-          label: "Reports",
-          href: "/admin/transactions/reports",
-        },
-      ],
-    },
-    {
-      id: "network",
-      label: "Network Management",
-      icon: (
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-          />
-        </svg>
-      ),
-      children: [
-        { id: "mlm-tree", label: "MLM Tree", href: "/admin/network/tree" },
-        {
-          id: "commissions",
-          label: "Commissions",
-          href: "/admin/network/commissions",
-        },
-        { id: "rankings", label: "Rankings", href: "/admin/network/rankings" },
-      ],
-    },
-    {
-      id: "reports",
-      label: "Reports & Analytics",
-      icon: (
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-      ),
-      children: [
-        {
-          id: "financial-reports",
-          label: "Financial Reports",
-          href: "/admin/reports/financial",
-        },
-        {
-          id: "user-reports",
-          label: "User Reports",
-          href: "/admin/reports/users",
-        },
-        {
-          id: "performance-reports",
-          label: "Performance",
-          href: "/admin/reports/performance",
-        },
-      ],
-    },
-    {
-      id: "settings",
-      label: "Settings",
-      icon: (
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      ),
-      children: [
-        {
-          id: "general-settings",
-          label: "General",
-          href: "/admin/settings/general",
-        },
-        {
-          id: "system-settings",
-          label: "System",
-          href: "/admin/settings/system",
-        },
-        { id: "email-settings", label: "Email", href: "/admin/settings/email" },
       ],
     },
   ];
